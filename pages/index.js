@@ -516,6 +516,8 @@ export default function Home() {
   const [showLoginPass, setShowLoginPass] = useState(false);
   const [showSignupPass, setShowSignupPass] = useState(false);
   const [showConfirmPass, setShowConfirmPass] = useState(false);
+  const [userPlan, setUserPlan] = useState("free"); // "free" | "base" | "pro"
+  const [showPaywall, setShowPaywall] = useState(false);
 
   // App state
   const [page, setPage] = useState("optimizer");
@@ -547,6 +549,7 @@ export default function Home() {
           const profileRes = await supabase.from("profiles").select("*").eq("id", session.user.id).single();
           const profile = profileRes?.data;
           if (profile) {
+            setUserPlan(profile.plan || "free");
             setSignupForm(prev => ({
               ...prev,
               fullName: profile.full_name || "",
@@ -561,6 +564,7 @@ export default function Home() {
           if (posts) {
             setPostHistory(posts.map(p => ({
               id: p.id,
+              created_at: p.created_at,
               date: new Date(p.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
               time: new Date(p.created_at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }),
               platform: p.platform,
@@ -615,6 +619,16 @@ export default function Home() {
 
   const analyze = async () => {
     if (!draft.trim()) return;
+    // Rate limiting / paywall check
+    if (userPlan === "free") {
+      if (postHistory.length >= 3) { setShowPaywall(true); return; }
+    } else if (userPlan === "base") {
+      const now = new Date();
+      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+      const postsThisMonth = postHistory.filter(p => p.created_at && new Date(p.created_at) >= monthStart);
+      if (postsThisMonth.length >= 50) { setShowPaywall(true); return; }
+    }
+    // "pro" and "enterprise" have no limit
     setLoading(true); setError(null); setSuggestions(null);
     try {
       const content = [];
@@ -699,6 +713,7 @@ export default function Home() {
       const profileRes = await supabase.from("profiles").select("*").eq("id", user.id).single();
       const profile = profileRes?.data;
       if (profile) {
+        setUserPlan(profile.plan || "free");
         setSignupForm(prev => ({
           ...prev,
           fullName: profile.full_name || "",
@@ -712,6 +727,7 @@ export default function Home() {
       if (posts) {
         setPostHistory(posts.map(p => ({
           id: p.id,
+          created_at: p.created_at,
           date: new Date(p.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
           time: new Date(p.created_at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }),
           platform: p.platform,
@@ -756,6 +772,18 @@ export default function Home() {
         },
       });
       if (authRes.error) { setAuthError(authRes.error.message); return; }
+      const newUser = authRes.data?.user;
+      if (newUser) {
+        await supabase.from("profiles").upsert({
+          id: newUser.id,
+          full_name: signupForm.fullName,
+          email: signupForm.email,
+          phone: signupForm.phone || null,
+          industry: signupForm.industry,
+          plan: "free",
+        }, { onConflict: "id" });
+        setUserPlan("free");
+      }
       setAuthView("app");
     } catch (err) {
       setAuthError("Signup failed. Please try again.");
@@ -1072,9 +1100,59 @@ export default function Home() {
 
 @media(max-width:768px){.sidebar{transform:translateX(-240px)}.sidebar.open{transform:translateX(0)}.main-wrap{margin-left:0}.sb-toggle{display:flex}}
 @media(max-width:640px){.hdr-inner{padding:16px 20px 24px}.hdr-t{font-size:30px}.hdr-logo{height:110px;margin-left:-10px}.hdr-brand{font-size:28px;margin-left:-28px}.main{padding:20px}.pbtn-row{flex-wrap:wrap}.pbtn{min-width:calc(50% - 4px)}.row{flex-direction:column}.hist-hdr{padding:24px 20px 16px}.hist-list{padding:0 20px 20px}}
+.paywall-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
+.paywall-modal{background:#fff;border-radius:16px;padding:40px 36px;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.18);text-align:center}
+.paywall-title{font-family:'DM Sans',sans-serif;font-size:22px;font-weight:700;color:#1C1917;margin:0 0 10px}
+.paywall-sub{font-family:'DM Sans',sans-serif;font-size:14px;color:#78716C;margin:0 0 28px;line-height:1.6}
+.paywall-plans{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.paywall-plan-btn{border:1.5px solid #E7E5E4;border-radius:10px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:border-color .15s,background .15s;background:#fff;width:100%;text-align:left}
+.paywall-plan-btn:hover{border-color:#A78BFA;background:#FAFAFF}
+.paywall-plan-btn.featured{border-color:#7C3AED;background:#F5F3FF}
+.paywall-plan-name{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;color:#1C1917;display:block}
+.paywall-plan-desc{font-family:'DM Sans',sans-serif;font-size:12px;color:#78716C;display:block;margin-top:2px}
+.paywall-plan-arrow{font-size:16px;color:#7C3AED}
+.paywall-divider{font-family:'JetBrains Mono',monospace;font-size:10px;color:#A8A29E;letter-spacing:.08em;text-transform:uppercase;margin:4px 0 12px}
+.paywall-enterprise{font-family:'DM Sans',sans-serif;font-size:13px;color:#57534E;margin-bottom:20px}
+.paywall-enterprise a{color:#1C1917;font-weight:600;text-decoration:none}
+.paywall-enterprise a:hover{text-decoration:underline}
+.paywall-dismiss{background:none;border:none;font-family:'DM Sans',sans-serif;font-size:13px;color:#A8A29E;cursor:pointer;text-decoration:underline}
       `}</style>
 
       <div className="app-layout">
+        {showPaywall && (
+          <div className="paywall-overlay" onClick={() => setShowPaywall(false)}>
+            <div className="paywall-modal" onClick={e => e.stopPropagation()}>
+              <div style={{ fontSize: 36, marginBottom: 14 }}>🔒</div>
+              <div className="paywall-title">
+                {userPlan === "free" ? "You've used your 3 free posts" : "Monthly limit reached"}
+              </div>
+              <div className="paywall-sub">
+                {userPlan === "free"
+                  ? "Upgrade to keep optimizing posts. Choose a plan below to unlock monthly usage."
+                  : "You've used all 50 optimizations this month. Upgrade to Pro for unlimited access."}
+              </div>
+              <div className="paywall-plans">
+                <button className="paywall-plan-btn" onClick={() => window.open("https://www.postyn.ai/store/p/base-plan", "_blank")}>
+                  <div>
+                    <span className="paywall-plan-name">Base Plan</span>
+                    <span className="paywall-plan-desc">50 optimizations / month</span>
+                  </div>
+                  <span className="paywall-plan-arrow">→</span>
+                </button>
+                <button className="paywall-plan-btn featured" onClick={() => window.open("https://www.postyn.ai/store/p/pro-plan", "_blank")}>
+                  <div>
+                    <span className="paywall-plan-name">Pro Plan</span>
+                    <span className="paywall-plan-desc">Unlimited optimizations / month</span>
+                  </div>
+                  <span className="paywall-plan-arrow">→</span>
+                </button>
+              </div>
+              <div className="paywall-divider">or</div>
+              <div className="paywall-enterprise">Need more? <a href="https://www.postyn.ai/contact" target="_blank" rel="noreferrer">Contact us</a> for Enterprise.</div>
+              <button className="paywall-dismiss" onClick={() => setShowPaywall(false)}>Maybe later</button>
+            </div>
+          </div>
+        )}
         {/* Sidebar */}
         <aside className={`sidebar ${sidebarOpen ? "" : "closed"}`}>
           <div className="sb-header">
@@ -1100,7 +1178,7 @@ export default function Home() {
                 <div className="sb-user-email">{signupForm.email || loginForm.email || ""}</div>
               </div>
             </div>
-            <button className="sb-signout" onClick={async () => { const sb = getSupabase(); if (sb) await sb.auth.signOut(); setAuthView("login"); setLoginForm({ email: "", password: "" }); setSignupForm({ fullName: "", email: "", phone: "", industry: "", password: "", confirmPassword: "" }); setSignupStep(1); setPage("optimizer"); setSuggestions(null); setDraft(""); setPostHistory([]); }}>
+            <button className="sb-signout" onClick={async () => { const sb = getSupabase(); if (sb) await sb.auth.signOut(); setAuthView("login"); setLoginForm({ email: "", password: "" }); setSignupForm({ fullName: "", email: "", phone: "", industry: "", password: "", confirmPassword: "" }); setSignupStep(1); setPage("optimizer"); setSuggestions(null); setDraft(""); setPostHistory([]); setUserPlan("free"); setShowPaywall(false); }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
               Sign Out
             </button>
