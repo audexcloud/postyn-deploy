@@ -1,9 +1,21 @@
 import { useState, useRef, useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
+let _supabase = null;
+function getSupabase() {
+  if (_supabase) return _supabase;
+  if (typeof window === "undefined") return null;
+  try {
+    const { createClient } = require("@supabase/supabase-js");
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (url && key) {
+      _supabase = createClient(url, key);
+    }
+  } catch (e) {
+    console.error("Supabase init failed:", e);
+  }
+  return _supabase;
+}
 
 const LOGO_SRC = "/logo.png";
 
@@ -525,7 +537,7 @@ export default function Home() {
   // ── Check for existing session on mount ──
   useEffect(() => {
     const checkSession = async () => {
-      if (!supabase) { setAuthView("login"); return; }
+      const supabase = getSupabase(); if (!supabase) { setAuthView("login"); return; }
       try {
         const sessionRes = await supabase.auth.getSession();
         const session = sessionRes?.data?.session;
@@ -643,7 +655,7 @@ export default function Home() {
       }, ...prev]);
       // Save to Supabase
       try {
-        if (supabase) {
+        const supabase = getSupabase(); if (supabase) {
           const userRes = await supabase.auth.getUser();
           const user = userRes?.data?.user;
           if (user) {
@@ -676,7 +688,7 @@ export default function Home() {
     if (!loginForm.email || !loginForm.password) { setAuthError("Please fill in all fields."); return; }
     if (!/\S+@\S+\.\S+/.test(loginForm.email)) { setAuthError("Please enter a valid email address."); return; }
     try {
-      if (!supabase) { setAuthError("Service unavailable. Please try again later."); return; }
+      const supabase = getSupabase(); if (!supabase) { setAuthError("Service unavailable. Please try again later."); return; }
       const authRes = await supabase.auth.signInWithPassword({
         email: loginForm.email,
         password: loginForm.password,
@@ -731,7 +743,7 @@ export default function Home() {
     if (signupForm.password.length < 8) { setAuthError("Password must be at least 8 characters."); return; }
     if (signupForm.password !== signupForm.confirmPassword) { setAuthError("Passwords do not match."); return; }
     try {
-      if (!supabase) { setAuthError("Service unavailable. Please try again later."); return; }
+      const supabase = getSupabase(); if (!supabase) { setAuthError("Service unavailable. Please try again later."); return; }
       const authRes = await supabase.auth.signUp({
         email: signupForm.email,
         password: signupForm.password,
@@ -1088,7 +1100,7 @@ export default function Home() {
                 <div className="sb-user-email">{signupForm.email || loginForm.email || ""}</div>
               </div>
             </div>
-            <button className="sb-signout" onClick={async () => { if (supabase) await supabase.auth.signOut(); setAuthView("login"); setLoginForm({ email: "", password: "" }); setSignupForm({ fullName: "", email: "", phone: "", industry: "", password: "", confirmPassword: "" }); setSignupStep(1); setPage("optimizer"); setSuggestions(null); setDraft(""); setPostHistory([]); }}>
+            <button className="sb-signout" onClick={async () => { const sb = getSupabase(); if (sb) await sb.auth.signOut(); setAuthView("login"); setLoginForm({ email: "", password: "" }); setSignupForm({ fullName: "", email: "", phone: "", industry: "", password: "", confirmPassword: "" }); setSignupStep(1); setPage("optimizer"); setSuggestions(null); setDraft(""); setPostHistory([]); }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
               Sign Out
             </button>
