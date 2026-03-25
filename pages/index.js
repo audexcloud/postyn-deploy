@@ -1,4 +1,10 @@
 import { useState, useRef, useEffect } from "react";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
+);
 
 const LOGO_SRC = "/logo.png";
 
@@ -491,8 +497,8 @@ function HistoryCard({ post, index }) {
 /* ═══ MAIN COMPONENT ═══ */
 export default function Home() {
   // Auth state
-  const [authView, setAuthView] = useState("login"); // "login" | "signup" | "app"
-  const [signupStep, setSignupStep] = useState(1); // 1 = info, 2 = credentials
+  const [authView, setAuthView] = useState("loading"); // "loading" | "login" | "signup" | "app"
+  const [signupStep, setSignupStep] = useState(1);
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
   const [signupForm, setSignupForm] = useState({ fullName: "", email: "", phone: "", industry: "", password: "", confirmPassword: "" });
   const [authError, setAuthError] = useState("");
@@ -501,7 +507,7 @@ export default function Home() {
   const [showConfirmPass, setShowConfirmPass] = useState(false);
 
   // App state
-  const [page, setPage] = useState("optimizer"); // "optimizer" | "history"
+  const [page, setPage] = useState("optimizer");
   const [postHistory, setPostHistory] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [draft, setDraft] = useState("");
@@ -516,6 +522,56 @@ export default function Home() {
   const textareaRef = useRef(null);
   const resultsRef = useRef(null);
   const fileRef = useRef(null);
+
+  // ── Check for existing session on mount ──
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          setAuthView("app");
+          // Load profile
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", session.user.id)
+            .single();
+          if (profile) {
+            setSignupForm(prev => ({
+              ...prev,
+              fullName: profile.full_name || "",
+              email: profile.email || session.user.email || "",
+              industry: profile.industry || "",
+            }));
+            setLoginForm(prev => ({ ...prev, email: session.user.email || "" }));
+          }
+          // Load post history
+          const { data: posts } = await supabase
+            .from("post_history")
+            .select("*")
+            .order("created_at", { ascending: false });
+          if (posts) {
+            setPostHistory(posts.map(p => ({
+              id: p.id,
+              date: new Date(p.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+              time: new Date(p.created_at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }),
+              platform: p.platform,
+              goal: p.goal,
+              original: p.original_draft.slice(0, 120) + (p.original_draft.length > 120 ? "\u2026" : ""),
+              optimized: p.optimized_post || "",
+              suggestionCount: p.suggestion_count,
+            })));
+          }
+        } else {
+          setAuthView("login");
+        }
+      } catch (err) {
+        console.error("Session check failed:", err);
+        setAuthView("login");
+      }
+    };
+    checkSession();
+  }, []);
 
   const cfg = P[platform];
   const charCount = draft.length;
@@ -577,7 +633,7 @@ export default function Home() {
       const text = data.content.map((b) => b.type === "text" ? b.text : "").join("");
       const parsed = JSON.parse(text.replace(/```json|```/g, "").trim());
       setSuggestions(parsed);
-      // Save to history
+      // Save to local state
       const rw = parsed.find((s) => s.severity === "final");
       setPostHistory((prev) => [{
         id: Date.now(),
@@ -585,10 +641,25 @@ export default function Home() {
         time: new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }),
         platform,
         goal,
-        original: draft.slice(0, 120) + (draft.length > 120 ? "…" : ""),
+        original: draft.slice(0, 120) + (draft.length > 120 ? "\u2026" : ""),
         optimized: rw?.suggestion || "",
         suggestionCount: parsed.filter((s) => s.severity !== "final").length,
       }, ...prev]);
+      // Save to Supabase
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          await supabase.from("post_history").insert({
+            user_id: user.id,
+            platform,
+            goal,
+            original_draft: draft,
+            optimized_post: rw?.suggestion || "",
+            suggestions: parsed,
+            suggestion_count: parsed.filter((s) => s.severity !== "final").length,
+          });
+        }
+      } catch (dbErr) { console.error("Failed to save to database:", dbErr); }
     } catch (err) {
       console.error(err);
       setError("Analysis failed — check your connection and try again.");
@@ -600,12 +671,52 @@ export default function Home() {
   const items = suggestions?.filter((s) => s.severity !== "final") || [];
 
   // ── Auth handlers ──
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setAuthError("");
     if (!loginForm.email || !loginForm.password) { setAuthError("Please fill in all fields."); return; }
     if (!/\S+@\S+\.\S+/.test(loginForm.email)) { setAuthError("Please enter a valid email address."); return; }
-    setAuthView("app");
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: loginForm.email,
+        password: loginForm.password,
+      });
+      if (error) { setAuthError(error.message); return; }
+      // Load profile
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", data.user.id)
+        .single();
+      if (profile) {
+        setSignupForm(prev => ({
+          ...prev,
+          fullName: profile.full_name || "",
+          email: profile.email || data.user.email || "",
+          industry: profile.industry || "",
+        }));
+      }
+      // Load post history
+      const { data: posts } = await supabase
+        .from("post_history")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (posts) {
+        setPostHistory(posts.map(p => ({
+          id: p.id,
+          date: new Date(p.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+          time: new Date(p.created_at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }),
+          platform: p.platform,
+          goal: p.goal,
+          original: p.original_draft.slice(0, 120) + (p.original_draft.length > 120 ? "\u2026" : ""),
+          optimized: p.optimized_post || "",
+          suggestionCount: p.suggestion_count,
+        })));
+      }
+      setAuthView("app");
+    } catch (err) {
+      setAuthError("Login failed. Please try again.");
+    }
   };
 
   const handleSignupNext = (e) => {
@@ -617,13 +728,29 @@ export default function Home() {
     setSignupStep(2);
   };
 
-  const handleSignupComplete = (e) => {
+  const handleSignupComplete = async (e) => {
     e.preventDefault();
     setAuthError("");
     if (!signupForm.password) { setAuthError("Please create a password."); return; }
     if (signupForm.password.length < 8) { setAuthError("Password must be at least 8 characters."); return; }
     if (signupForm.password !== signupForm.confirmPassword) { setAuthError("Passwords do not match."); return; }
-    setAuthView("app");
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email: signupForm.email,
+        password: signupForm.password,
+        options: {
+          data: {
+            full_name: signupForm.fullName,
+            phone: signupForm.phone,
+            industry: signupForm.industry,
+          },
+        },
+      });
+      if (error) { setAuthError(error.message); return; }
+      setAuthView("app");
+    } catch (err) {
+      setAuthError("Signup failed. Please try again.");
+    }
   };
 
   const eyeIcon = (
@@ -636,6 +763,18 @@ export default function Home() {
       <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>
     </svg>
   );
+
+  // ── Loading screen while checking session ──
+  if (authView === "loading") {
+    return (
+      <div style={{ fontFamily: "'DM Sans', sans-serif", minHeight: "100vh", background: "#FAFAF9", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ textAlign: "center" }}>
+          <img src={LOGO_SRC} alt="Postyn.ai" style={{ height: 80, marginBottom: 16 }} />
+          <div style={{ fontSize: 14, color: "#78716C" }}>Loading...</div>
+        </div>
+      </div>
+    );
+  }
 
   // ── Auth pages ──
   if (authView !== "app") {
@@ -952,7 +1091,7 @@ export default function Home() {
                 <div className="sb-user-email">{signupForm.email || loginForm.email || ""}</div>
               </div>
             </div>
-            <button className="sb-signout" onClick={() => { setAuthView("login"); setLoginForm({ email: "", password: "" }); setSignupForm({ fullName: "", email: "", phone: "", industry: "", password: "", confirmPassword: "" }); setSignupStep(1); setPage("optimizer"); setSuggestions(null); setDraft(""); }}>
+            <button className="sb-signout" onClick={async () => { await supabase.auth.signOut(); setAuthView("login"); setLoginForm({ email: "", password: "" }); setSignupForm({ fullName: "", email: "", phone: "", industry: "", password: "", confirmPassword: "" }); setSignupStep(1); setPage("optimizer"); setSuggestions(null); setDraft(""); setPostHistory([]); }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
               Sign Out
             </button>
