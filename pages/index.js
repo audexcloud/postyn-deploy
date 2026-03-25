@@ -1,10 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
-);
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 
 const LOGO_SRC = "/logo.png";
 
@@ -526,16 +525,15 @@ export default function Home() {
   // ── Check for existing session on mount ──
   useEffect(() => {
     const checkSession = async () => {
+      if (!supabase) { setAuthView("login"); return; }
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const sessionRes = await supabase.auth.getSession();
+        const session = sessionRes?.data?.session;
         if (session) {
           setAuthView("app");
           // Load profile
-          const { data: profile } = await supabase
-            .from("profiles")
-            .select("*")
-            .eq("id", session.user.id)
-            .single();
+          const profileRes = await supabase.from("profiles").select("*").eq("id", session.user.id).single();
+          const profile = profileRes?.data;
           if (profile) {
             setSignupForm(prev => ({
               ...prev,
@@ -546,10 +544,8 @@ export default function Home() {
             setLoginForm(prev => ({ ...prev, email: session.user.email || "" }));
           }
           // Load post history
-          const { data: posts } = await supabase
-            .from("post_history")
-            .select("*")
-            .order("created_at", { ascending: false });
+          const postsRes = await supabase.from("post_history").select("*").order("created_at", { ascending: false });
+          const posts = postsRes?.data;
           if (posts) {
             setPostHistory(posts.map(p => ({
               id: p.id,
@@ -647,17 +643,20 @@ export default function Home() {
       }, ...prev]);
       // Save to Supabase
       try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          await supabase.from("post_history").insert({
-            user_id: user.id,
-            platform,
-            goal,
-            original_draft: draft,
-            optimized_post: rw?.suggestion || "",
-            suggestions: parsed,
-            suggestion_count: parsed.filter((s) => s.severity !== "final").length,
-          });
+        if (supabase) {
+          const userRes = await supabase.auth.getUser();
+          const user = userRes?.data?.user;
+          if (user) {
+            await supabase.from("post_history").insert({
+              user_id: user.id,
+              platform,
+              goal,
+              original_draft: draft,
+              optimized_post: rw?.suggestion || "",
+              suggestions: parsed,
+              suggestion_count: parsed.filter((s) => s.severity !== "final").length,
+            });
+          }
         }
       } catch (dbErr) { console.error("Failed to save to database:", dbErr); }
     } catch (err) {
@@ -677,30 +676,27 @@ export default function Home() {
     if (!loginForm.email || !loginForm.password) { setAuthError("Please fill in all fields."); return; }
     if (!/\S+@\S+\.\S+/.test(loginForm.email)) { setAuthError("Please enter a valid email address."); return; }
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      if (!supabase) { setAuthError("Service unavailable. Please try again later."); return; }
+      const authRes = await supabase.auth.signInWithPassword({
         email: loginForm.email,
         password: loginForm.password,
       });
-      if (error) { setAuthError(error.message); return; }
+      if (authRes.error) { setAuthError(authRes.error.message); return; }
+      const user = authRes.data?.user;
       // Load profile
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", data.user.id)
-        .single();
+      const profileRes = await supabase.from("profiles").select("*").eq("id", user.id).single();
+      const profile = profileRes?.data;
       if (profile) {
         setSignupForm(prev => ({
           ...prev,
           fullName: profile.full_name || "",
-          email: profile.email || data.user.email || "",
+          email: profile.email || user.email || "",
           industry: profile.industry || "",
         }));
       }
       // Load post history
-      const { data: posts } = await supabase
-        .from("post_history")
-        .select("*")
-        .order("created_at", { ascending: false });
+      const postsRes = await supabase.from("post_history").select("*").order("created_at", { ascending: false });
+      const posts = postsRes?.data;
       if (posts) {
         setPostHistory(posts.map(p => ({
           id: p.id,
@@ -735,7 +731,8 @@ export default function Home() {
     if (signupForm.password.length < 8) { setAuthError("Password must be at least 8 characters."); return; }
     if (signupForm.password !== signupForm.confirmPassword) { setAuthError("Passwords do not match."); return; }
     try {
-      const { data, error } = await supabase.auth.signUp({
+      if (!supabase) { setAuthError("Service unavailable. Please try again later."); return; }
+      const authRes = await supabase.auth.signUp({
         email: signupForm.email,
         password: signupForm.password,
         options: {
@@ -746,7 +743,7 @@ export default function Home() {
           },
         },
       });
-      if (error) { setAuthError(error.message); return; }
+      if (authRes.error) { setAuthError(authRes.error.message); return; }
       setAuthView("app");
     } catch (err) {
       setAuthError("Signup failed. Please try again.");
@@ -1091,7 +1088,7 @@ export default function Home() {
                 <div className="sb-user-email">{signupForm.email || loginForm.email || ""}</div>
               </div>
             </div>
-            <button className="sb-signout" onClick={async () => { await supabase.auth.signOut(); setAuthView("login"); setLoginForm({ email: "", password: "" }); setSignupForm({ fullName: "", email: "", phone: "", industry: "", password: "", confirmPassword: "" }); setSignupStep(1); setPage("optimizer"); setSuggestions(null); setDraft(""); setPostHistory([]); }}>
+            <button className="sb-signout" onClick={async () => { if (supabase) await supabase.auth.signOut(); setAuthView("login"); setLoginForm({ email: "", password: "" }); setSignupForm({ fullName: "", email: "", phone: "", industry: "", password: "", confirmPassword: "" }); setSignupStep(1); setPage("optimizer"); setSuggestions(null); setDraft(""); setPostHistory([]); }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
               Sign Out
             </button>
