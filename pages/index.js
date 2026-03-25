@@ -622,13 +622,14 @@ export default function Home() {
     // Rate limiting / paywall check
     if (userPlan === "free") {
       if (postHistory.length >= 3) { setShowPaywall(true); return; }
-    } else if (userPlan === "base") {
+    } else if (userPlan === "base" || userPlan === "pro") {
       const now = new Date();
       const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
       const postsThisMonth = postHistory.filter(p => p.created_at && new Date(p.created_at) >= monthStart);
-      if (postsThisMonth.length >= 50) { setShowPaywall(true); return; }
+      const limit = userPlan === "pro" ? 150 : 50;
+      if (postsThisMonth.length >= limit) { setShowPaywall(true); return; }
     }
-    // "pro" and "enterprise" have no limit
+    // "enterprise" has no limit
     setLoading(true); setError(null); setSuggestions(null);
     try {
       const content = [];
@@ -997,7 +998,9 @@ export default function Home() {
 .root{min-height:100vh;background:#FAFAF9;color:#1C1917}
 .hdr{padding:0;border-bottom:1px solid #E7E5E4;background:#FAFAF9}
 .hdr-inner{max-width:800px;margin:0 auto;padding:20px 32px 32px;text-align:center}
-.hdr-bar{display:inline-flex;align-items:center;gap:0;margin-bottom:4px}
+.hdr-bar{display:flex;align-items:center;gap:0;margin-bottom:4px;width:100%;justify-content:space-between}
+.upgrade-btn{margin-left:auto;padding:8px 18px;background:#7C3AED;color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:background .15s;white-space:nowrap}
+.upgrade-btn:hover{background:#6D28D9}
 .hdr-logo{height:160px;width:auto;display:block}
 .hdr-brand{font-family:'Instrument Serif',serif;font-size:38px;font-weight:400;color:#1C1917;letter-spacing:-0.01em;margin-left:-40px}
 .hdr-t{font-family:'Instrument Serif',serif;font-size:40px;font-weight:400;line-height:1.1;color:#1C1917;margin-bottom:8px}
@@ -1115,44 +1118,84 @@ export default function Home() {
 .paywall-enterprise{font-family:'DM Sans',sans-serif;font-size:13px;color:#57534E;margin-bottom:20px}
 .paywall-enterprise a{color:#1C1917;font-weight:600;text-decoration:none}
 .paywall-enterprise a:hover{text-decoration:underline}
+.paywall-renewal-box{display:inline-flex;flex-direction:column;align-items:center;background:#F5F3FF;border:1.5px solid #DDD6FE;border-radius:10px;padding:12px 28px;margin-bottom:20px}
+.paywall-renewal-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#7C3AED;margin-bottom:2px}
+.paywall-renewal-days{font-family:'DM Sans',sans-serif;font-size:28px;font-weight:700;color:#7C3AED}
 .paywall-dismiss{background:none;border:none;font-family:'DM Sans',sans-serif;font-size:13px;color:#A8A29E;cursor:pointer;text-decoration:underline}
       `}</style>
 
       <div className="app-layout">
-        {showPaywall && (
+        {showPaywall && (() => {
+          const now = new Date();
+          const nextMonthStart = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+          const daysUntilRenewal = Math.ceil((nextMonthStart - now) / (1000 * 60 * 60 * 24));
+          return (
           <div className="paywall-overlay" onClick={() => setShowPaywall(false)}>
             <div className="paywall-modal" onClick={e => e.stopPropagation()}>
-              <div style={{ fontSize: 36, marginBottom: 14 }}>🔒</div>
-              <div className="paywall-title">
-                {userPlan === "free" ? "You've used your 3 free posts" : "Monthly limit reached"}
-              </div>
-              <div className="paywall-sub">
-                {userPlan === "free"
-                  ? "Upgrade to keep optimizing posts. Choose a plan below to unlock monthly usage."
-                  : "You've used all 50 optimizations this month. Upgrade to Pro for unlimited access."}
-              </div>
-              <div className="paywall-plans">
-                <button className="paywall-plan-btn" onClick={() => window.open("https://www.postyn.ai/store/p/base-plan", "_blank")}>
-                  <div>
-                    <span className="paywall-plan-name">Base Plan</span>
-                    <span className="paywall-plan-desc">50 optimizations / month</span>
+              {userPlan === "free" ? (
+                <>
+                  <div style={{ fontSize: 36, marginBottom: 14 }}>🔒</div>
+                  <div className="paywall-title">You've used your 3 free posts</div>
+                  <div className="paywall-sub">Upgrade to keep optimizing posts. Choose a plan below to unlock monthly usage.</div>
+                  <div className="paywall-plans">
+                    <button className="paywall-plan-btn" onClick={() => window.open("https://www.postyn.ai/store/p/base-plan", "_blank")}>
+                      <div>
+                        <span className="paywall-plan-name">Base Plan</span>
+                        <span className="paywall-plan-desc">50 optimizations / month</span>
+                      </div>
+                      <span className="paywall-plan-arrow">→</span>
+                    </button>
+                    <button className="paywall-plan-btn featured" onClick={() => window.open("https://www.postyn.ai/store/p/pro-plan", "_blank")}>
+                      <div>
+                        <span className="paywall-plan-name">Pro Plan</span>
+                        <span className="paywall-plan-desc">Unlimited optimizations / month</span>
+                      </div>
+                      <span className="paywall-plan-arrow">→</span>
+                    </button>
                   </div>
-                  <span className="paywall-plan-arrow">→</span>
-                </button>
-                <button className="paywall-plan-btn featured" onClick={() => window.open("https://www.postyn.ai/store/p/pro-plan", "_blank")}>
-                  <div>
-                    <span className="paywall-plan-name">Pro Plan</span>
-                    <span className="paywall-plan-desc">Unlimited optimizations / month</span>
+                  <div className="paywall-divider">or</div>
+                  <div className="paywall-enterprise">Need more? <a href="https://www.postyn.ai/contact" target="_blank" rel="noreferrer">Contact us</a> for Enterprise.</div>
+                  <button className="paywall-dismiss" onClick={() => setShowPaywall(false)}>Maybe later</button>
+                </>
+              ) : userPlan === "base" ? (
+                <>
+                  <div style={{ fontSize: 36, marginBottom: 14 }}>📅</div>
+                  <div className="paywall-title">You've used all 50 posts this month</div>
+                  <div className="paywall-sub">Your limit resets in <strong>{daysUntilRenewal} day{daysUntilRenewal !== 1 ? "s" : ""}</strong> on the 1st. You can wait, or upgrade to Pro for 150 posts a month.</div>
+                  <div className="paywall-renewal-box">
+                    <span className="paywall-renewal-label">Resets in</span>
+                    <span className="paywall-renewal-days">{daysUntilRenewal}d</span>
                   </div>
-                  <span className="paywall-plan-arrow">→</span>
-                </button>
-              </div>
-              <div className="paywall-divider">or</div>
-              <div className="paywall-enterprise">Need more? <a href="https://www.postyn.ai/contact" target="_blank" rel="noreferrer">Contact us</a> for Enterprise.</div>
-              <button className="paywall-dismiss" onClick={() => setShowPaywall(false)}>Maybe later</button>
+                  <div className="paywall-plans">
+                    <button className="paywall-plan-btn featured" onClick={() => window.open("https://www.postyn.ai/store/p/pro-plan", "_blank")}>
+                      <div>
+                        <span className="paywall-plan-name">Upgrade to Pro</span>
+                        <span className="paywall-plan-desc">150 optimizations / month</span>
+                      </div>
+                      <span className="paywall-plan-arrow">→</span>
+                    </button>
+                  </div>
+                  <div className="paywall-divider">or</div>
+                  <div className="paywall-enterprise">Need even more? <a href="https://www.postyn.ai/contact" target="_blank" rel="noreferrer">Contact us</a> for Enterprise.</div>
+                  <button className="paywall-dismiss" onClick={() => setShowPaywall(false)}>I'll wait {daysUntilRenewal} day{daysUntilRenewal !== 1 ? "s" : ""}</button>
+                </>
+              ) : userPlan === "pro" ? (
+                <>
+                  <div style={{ fontSize: 36, marginBottom: 14 }}>📅</div>
+                  <div className="paywall-title">You've used all 150 posts this month</div>
+                  <div className="paywall-sub">Your limit resets in <strong>{daysUntilRenewal} day{daysUntilRenewal !== 1 ? "s" : ""}</strong> on the 1st. You can wait, or contact us for an Enterprise plan with higher limits.</div>
+                  <div className="paywall-renewal-box">
+                    <span className="paywall-renewal-label">Resets in</span>
+                    <span className="paywall-renewal-days">{daysUntilRenewal}d</span>
+                  </div>
+                  <div className="paywall-enterprise" style={{ marginBottom: 20 }}>Want more than 150 posts? <a href="https://www.postyn.ai/contact" target="_blank" rel="noreferrer">Contact us</a> for Enterprise.</div>
+                  <button className="paywall-dismiss" onClick={() => setShowPaywall(false)}>I'll wait {daysUntilRenewal} day{daysUntilRenewal !== 1 ? "s" : ""}</button>
+                </>
+              ) : null}
             </div>
           </div>
-        )}
+          );
+        })()}
         {/* Sidebar */}
         <aside className={`sidebar ${sidebarOpen ? "" : "closed"}`}>
           <div className="sb-header">
@@ -1200,6 +1243,11 @@ export default function Home() {
             <div className="hdr-bar">
               <img src={LOGO_SRC} alt="Postyn.ai" className="hdr-logo" />
               <span className="hdr-brand">Postyn.ai</span>
+              {userPlan === "free" && (
+                <button className="upgrade-btn" onClick={() => setShowPaywall(true)}>
+                  Upgrade
+                </button>
+              )}
             </div>
             <h1 className="hdr-t">Write posts that actually perform.</h1>
             <p className="hdr-s">Paste your draft. Pick your platform. Get specific, explainable changes backed by how each algorithm actually works.</p>
