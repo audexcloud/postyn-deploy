@@ -154,5 +154,17 @@ export default async function handler(req, res) {
     }
   }
 
-  return res.status(200).json({ ok: true, upgraded, created, total: orders.length });
+  // Downgrade any subscriptions whose billing period has expired
+  const { data: expired } = await supabase
+    .from("profiles")
+    .update({ plan: "free", plan_expires_at: null })
+    .lt("plan_expires_at", new Date().toISOString())
+    .neq("plan", "free")
+    .select("email");
+
+  if (expired?.length) {
+    console.log(`Downgraded ${expired.length} expired subscription(s):`, expired.map(u => u.email));
+  }
+
+  return res.status(200).json({ ok: true, upgraded, created, expired: expired?.length || 0, total: orders.length });
 }

@@ -544,6 +544,9 @@ export default function Home() {
   const [attachments, setAttachments] = useState([]);
   const [postContext, setPostContext] = useState("");
   const [alignHistory, setAlignHistory] = useState(false);
+  const [planExpiresAt, setPlanExpiresAt] = useState(null);
+  const [cancelConfirm, setCancelConfirm] = useState(false);
+  const [cancelLoading, setCancelLoading] = useState(false);
   const textareaRef = useRef(null);
   const resultsRef = useRef(null);
   const fileRef = useRef(null);
@@ -562,6 +565,7 @@ export default function Home() {
           const profile = profileRes?.data;
           if (profile) {
             setUserPlan(profile.plan || "free");
+            setPlanExpiresAt(profile.plan_expires_at || null);
             setSignupForm(prev => ({
               ...prev,
               fullName: profile.full_name || "",
@@ -632,13 +636,14 @@ export default function Home() {
   const analyze = async () => {
     if (!draft.trim()) return;
     // Rate limiting / paywall check
-    if (userPlan === "free") {
+    const effectivePlan = planExpiresAt && new Date() >= new Date(planExpiresAt) ? "free" : userPlan;
+    if (effectivePlan === "free") {
       if (postHistory.length >= 3) { setShowPaywall(true); return; }
-    } else if (userPlan === "base" || userPlan === "pro") {
+    } else if (effectivePlan === "base" || effectivePlan === "pro") {
       const now = new Date();
       const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
       const postsThisMonth = postHistory.filter(p => p.created_at && new Date(p.created_at) >= monthStart);
-      const limit = userPlan === "pro" ? 150 : 50;
+      const limit = effectivePlan === "pro" ? 150 : 50;
       if (postsThisMonth.length >= limit) { setShowPaywall(true); return; }
     }
     // "enterprise" has no limit
@@ -727,6 +732,7 @@ export default function Home() {
       const profile = profileRes?.data;
       if (profile) {
         setUserPlan(profile.plan || "free");
+        setPlanExpiresAt(profile.plan_expires_at || null);
         setSignupForm(prev => ({
           ...prev,
           fullName: profile.full_name || "",
@@ -1125,6 +1131,34 @@ export default function Home() {
 
 @media(max-width:768px){.sidebar{transform:translateX(-240px)}.sidebar.open{transform:translateX(0)}.main-wrap{margin-left:0}.sb-toggle{display:flex}}
 @media(max-width:640px){.hdr-inner{padding:16px 20px 24px}.hdr-t{font-size:30px}.hdr-logo{height:110px;margin-left:-10px}.hdr-brand{font-size:28px;margin-left:-28px}.main{padding:20px}.pbtn-row{flex-wrap:wrap}.pbtn{min-width:calc(50% - 4px)}.row{flex-direction:column}.hist-hdr{padding:24px 20px 16px}.hist-list{padding:0 20px 20px}}
+.sett-body{max-width:600px;margin:0 auto;padding:0 32px 32px;display:flex;flex-direction:column;gap:16px}
+.sett-card{background:#fff;border:1px solid #E7E5E4;border-radius:12px;padding:24px}
+.sett-danger-card{border-color:#FCA5A5}
+.sett-cancelled-card{border-color:#FCD34D;background:#FFFBEB}
+.sett-card-title{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#A8A29E;margin-bottom:16px}
+.sett-plan-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.sett-plan-badge{display:inline-block;padding:4px 12px;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;margin-bottom:6px}
+.sett-plan-free{background:#F5F5F4;color:#57534E}
+.sett-plan-base{background:#EFF6FF;color:#1D4ED8}
+.sett-plan-pro{background:#F5F3FF;color:#7C3AED}
+.sett-plan-enterprise{background:#F0FDF4;color:#15803D}
+.sett-plan-limit{font-size:13px;color:#78716C}
+.sett-expiry{font-size:12px;color:#D97706;margin-top:4px;font-weight:500}
+.sett-usage{text-align:right}
+.sett-usage-num{font-family:'DM Sans',sans-serif;font-size:20px;font-weight:700;color:#1C1917}
+.sett-usage-label{font-size:12px;color:#A8A29E}
+.sett-cancel-desc{font-size:14px;color:#78716C;line-height:1.6;margin-bottom:16px}
+.sett-cancel-btn{padding:10px 20px;border:1.5px solid #FCA5A5;border-radius:8px;background:#fff;color:#991B1B;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:all .15s}
+.sett-cancel-btn:hover{background:#FEF2F2}
+.sett-confirm-wrap{background:#FEF2F2;border-radius:8px;padding:16px}
+.sett-confirm-text{font-size:13px;color:#991B1B;margin-bottom:12px;line-height:1.5}
+.sett-confirm-row{display:flex;gap:10px;flex-wrap:wrap}
+.sett-confirm-yes{padding:9px 18px;background:#991B1B;color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:background .15s}
+.sett-confirm-yes:hover{background:#7F1D1D}
+.sett-confirm-yes:disabled{opacity:.5;cursor:not-allowed}
+.sett-confirm-no{padding:9px 18px;background:#fff;color:#57534E;border:1.5px solid #E7E5E4;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer}
+.sett-reactivate-btn{padding:10px 20px;background:#1C1917;color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s}
+.sett-reactivate-btn:hover{background:#292524}
 .paywall-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
 .paywall-modal{background:#fff;border-radius:16px;padding:40px 36px;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.18);text-align:center}
 .paywall-title{font-family:'DM Sans',sans-serif;font-size:22px;font-weight:700;color:#1C1917;margin:0 0 10px}
@@ -1234,6 +1268,10 @@ export default function Home() {
               Previous Posts
               {postHistory.length > 0 && <span style={{ marginLeft: "auto", background: "#E7E5E4", borderRadius: 100, padding: "1px 7px", fontSize: 11, fontWeight: 600, color: "#57534E" }}>{postHistory.length}</span>}
             </button>
+            <button className={`sb-item ${page === "settings" ? "active" : ""}`} onClick={() => setPage("settings")}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+              Settings
+            </button>
           </nav>
           <div className="sb-footer">
             <div className="sb-user">
@@ -1243,7 +1281,7 @@ export default function Home() {
                 <div className="sb-user-email">{signupForm.email || loginForm.email || ""}</div>
               </div>
             </div>
-            <button className="sb-signout" onClick={async () => { const sb = getSupabase(); if (sb) await sb.auth.signOut(); setAuthView("login"); setLoginForm({ email: "", password: "" }); setSignupForm({ fullName: "", email: "", phone: "", industry: "", password: "", confirmPassword: "" }); setSignupStep(1); setPage("optimizer"); setSuggestions(null); setDraft(""); setPostHistory([]); setUserPlan("free"); setShowPaywall(false); }}>
+            <button className="sb-signout" onClick={async () => { const sb = getSupabase(); if (sb) await sb.auth.signOut(); setAuthView("login"); setLoginForm({ email: "", password: "" }); setSignupForm({ fullName: "", email: "", phone: "", industry: "", password: "", confirmPassword: "" }); setSignupStep(1); setPage("optimizer"); setSuggestions(null); setDraft(""); setPostHistory([]); setUserPlan("free"); setPlanExpiresAt(null); setCancelConfirm(false); setShowPaywall(false); }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
               Sign Out
             </button>
@@ -1423,6 +1461,79 @@ export default function Home() {
         </main>
       </div>
         )}
+
+        {page === "settings" && (() => {
+          const now = new Date();
+          const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+          const postsThisMonth = postHistory.filter(p => p.created_at && new Date(p.created_at) >= monthStart).length;
+          const totalPosts = postHistory.length;
+          const isCancelled = !!planExpiresAt;
+          const expiryDate = planExpiresAt ? new Date(planExpiresAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : null;
+          const planLabel = { free: "Free", base: "Base", pro: "Pro", enterprise: "Enterprise" }[userPlan] || "Free";
+          const planLimit = { free: "3 lifetime posts", base: "50 posts / month", pro: "150 posts / month", enterprise: "Unlimited" }[userPlan] || "3 lifetime posts";
+          const usageDisplay = userPlan === "free" ? `${totalPosts} / 3 lifetime` : userPlan === "enterprise" ? `${postsThisMonth} this month` : `${postsThisMonth} / ${userPlan === "pro" ? 150 : 50} this month`;
+          const handleCancelPlan = async () => {
+            setCancelLoading(true);
+            try {
+              const sb = getSupabase();
+              const { data: { session } } = await sb.auth.getSession();
+              const res = await fetch("/api/cancel-plan", { method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${session.access_token}` } });
+              const data = await res.json();
+              if (data.expiresAt) { setPlanExpiresAt(data.expiresAt); setCancelConfirm(false); }
+            } catch(err) { console.error("Cancel failed:", err); }
+            setCancelLoading(false);
+          };
+          return (
+          <div className="root">
+            <div className="hist-hdr">
+              <h1 className="hist-t">Settings</h1>
+              <p className="hist-sub">Manage your account and subscription</p>
+            </div>
+            <div className="sett-body">
+              <div className="sett-card">
+                <div className="sett-card-title">Your Plan</div>
+                <div className="sett-plan-row">
+                  <div>
+                    <span className={`sett-plan-badge sett-plan-${userPlan}`}>{planLabel}</span>
+                    <div className="sett-plan-limit">{planLimit}</div>
+                    {isCancelled && <div className="sett-expiry">Access ends {expiryDate}</div>}
+                  </div>
+                  <div className="sett-usage">
+                    <div className="sett-usage-num">{usageDisplay}</div>
+                    <div className="sett-usage-label">posts used</div>
+                  </div>
+                </div>
+              </div>
+
+              {userPlan !== "free" && !isCancelled && (
+                <div className="sett-card sett-danger-card">
+                  <div className="sett-card-title">Cancel Plan</div>
+                  <p className="sett-cancel-desc">You'll keep full access until the end of your current billing month. After that your account reverts to the free tier (3 lifetime posts).</p>
+                  {!cancelConfirm ? (
+                    <button className="sett-cancel-btn" onClick={() => setCancelConfirm(true)}>Cancel my plan</button>
+                  ) : (
+                    <div className="sett-confirm-wrap">
+                      <p className="sett-confirm-text">Are you sure? Your {planLabel} plan will remain active until the end of this month, then switch to Free.</p>
+                      <div className="sett-confirm-row">
+                        <button className="sett-confirm-yes" onClick={handleCancelPlan} disabled={cancelLoading}>{cancelLoading ? "Cancelling..." : "Yes, cancel my plan"}</button>
+                        <button className="sett-confirm-no" onClick={() => setCancelConfirm(false)}>Keep my plan</button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {isCancelled && (
+                <div className="sett-card sett-cancelled-card">
+                  <div className="sett-card-title">Plan Cancelled</div>
+                  <p className="sett-cancel-desc">Your {planLabel} plan is still active and will remain so until <strong>{expiryDate}</strong>. After that your account switches to Free.</p>
+                  <button className="sett-reactivate-btn" onClick={() => window.open(userPlan === "base" ? "https://www.postyn.ai/store/p/base-plan" : "https://www.postyn.ai/store/p/pro-plan", "_blank")}>Reactivate plan</button>
+                </div>
+              )}
+            </div>
+          </div>
+          );
+        })()}
 
         {page === "history" && (
           <div className="root">
