@@ -410,12 +410,15 @@ const GENERIC = {
 };
 
 /* ═══ SYSTEM PROMPT BUILDER ═══ */
-const buildPrompt = (platform, goal, context) => {
+const buildPrompt = (platform, goal, context, historyPosts) => {
   const c = P[platform];
   const skill = SKILLS[platform]?.[goal];
   const goalCtx = skill || `Optimization goal: ${GENERIC[goal]}`;
   const contextBlock = context?.trim()
     ? `\nAUTHOR'S INTENT: "${context.trim()}"\nUse this to inform every suggestion — keep optimizations aligned with what the author is trying to achieve.\n`
+    : "";
+  const historyBlock = historyPosts?.length
+    ? `\nCONSISTENCY CONTEXT (Pro feature): The following are this author's recent posts on ${c.name}. Align the tone, voice, style, vocabulary, and content themes of your suggestions with these to maintain consistency across their feed:\n${historyPosts.map((p, i) => `[Post ${i + 1}]: ${p}`).join("\n")}\n`
     : "";
 
   return `You are an elite social media strategist specializing in ${c.name}.
@@ -427,7 +430,7 @@ Algorithm: ${c.algo}
 Best practices: ${c.tips.join("; ")}
 Character limit: ${c.max}
 Hashtag guidance: ${c.tags}
-${contextBlock}
+${contextBlock}${historyBlock}
 ${goalCtx}
 
 OUTPUT: Return a JSON array of optimization suggestions. Each object:
@@ -540,6 +543,7 @@ export default function Home() {
   const [showInfo, setShowInfo] = useState(false);
   const [attachments, setAttachments] = useState([]);
   const [postContext, setPostContext] = useState("");
+  const [alignHistory, setAlignHistory] = useState(false);
   const textareaRef = useRef(null);
   const resultsRef = useRef(null);
   const fileRef = useRef(null);
@@ -656,7 +660,7 @@ export default function Home() {
         body: JSON.stringify({
           model: "claude-opus-4-5-20251101",
           max_tokens: 4000,
-          system: buildPrompt(platform, goal, postContext),
+          system: buildPrompt(platform, goal, postContext, alignHistory ? postHistory.filter(p => p.platform === platform && p.optimized).slice(0, 5).map(p => p.optimized) : null),
           messages: [{ role: "user", content: content.length === 1 ? draft + attCtx : content }],
         }),
       });
@@ -1050,6 +1054,10 @@ export default function Home() {
 .ctx-ta{width:100%;padding:10px 14px;border:1.5px solid #E7E5E4;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;color:#1C1917;background:#FAFAF9;outline:none;resize:none;transition:border-color .15s;line-height:1.5}
 .ctx-ta:focus{border-color:#A8A29E;background:#fff}
 .ctx-ta::placeholder{color:#D6D3D1}
+.align-row{display:flex;align-items:center;gap:10px;margin-bottom:16px;cursor:pointer;user-select:none}
+.align-check{width:16px;height:16px;accent-color:#7C3AED;cursor:pointer;flex-shrink:0}
+.align-text{font-family:'DM Sans',sans-serif;font-size:14px;color:#57534E}
+.align-pro{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#7C3AED;background:#F5F3FF;border:1px solid #DDD6FE;border-radius:4px;padding:2px 6px}
 .att-prev{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
 .att-chip{display:flex;align-items:center;gap:8px;padding:6px 10px 6px 6px;background:#fff;border:1px solid #E7E5E4;border-radius:8px}
 .att-thumb{width:36px;height:36px;border-radius:5px;object-fit:cover}
@@ -1355,6 +1363,14 @@ export default function Home() {
               rows={2}
             />
           </div>
+
+          {userPlan === "pro" || userPlan === "enterprise" ? (
+            <label className="align-row">
+              <input type="checkbox" className="align-check" checked={alignHistory} onChange={e => setAlignHistory(e.target.checked)} />
+              <span className="align-text">Align with my previous posts for consistency</span>
+              <span className="align-pro">Pro</span>
+            </label>
+          ) : null}
 
           <button className="go" onClick={analyze} disabled={!draft.trim() || loading}>{loading ? "Analyzing..." : "Optimize this post"}</button>
 
