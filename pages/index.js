@@ -410,10 +410,13 @@ const GENERIC = {
 };
 
 /* ═══ SYSTEM PROMPT BUILDER ═══ */
-const buildPrompt = (platform, goal) => {
+const buildPrompt = (platform, goal, context) => {
   const c = P[platform];
   const skill = SKILLS[platform]?.[goal];
   const goalCtx = skill || `Optimization goal: ${GENERIC[goal]}`;
+  const contextBlock = context?.trim()
+    ? `\nAUTHOR'S INTENT: "${context.trim()}"\nUse this to inform every suggestion — keep optimizations aligned with what the author is trying to achieve.\n`
+    : "";
 
   return `You are an elite social media strategist specializing in ${c.name}.
 
@@ -424,7 +427,7 @@ Algorithm: ${c.algo}
 Best practices: ${c.tips.join("; ")}
 Character limit: ${c.max}
 Hashtag guidance: ${c.tags}
-
+${contextBlock}
 ${goalCtx}
 
 OUTPUT: Return a JSON array of optimization suggestions. Each object:
@@ -438,7 +441,11 @@ Final object: "section":"Rewritten Post", "severity":"final", "current":"", "sug
 
 Return ONLY JSON array. No markdown, no backticks, no preamble.
 
-RULES: 5-8 suggestions + rewrite. Be SPECIFIC — write exact changes. Order by impact. Reference platform mechanics. Rewrite must sound like a specific human with real experience.`;
+RULES:
+- PRESERVE THE CORE MESSAGE: Never change the central idea, opinion, story, or point of the post. The author's meaning, stance, and subject must remain fully intact. Only change HOW it is communicated, not WHAT is being said.
+- 5-8 suggestions + rewrite. Be SPECIFIC — write exact changes. Order by impact. Reference platform mechanics.
+- Rewrite must sound like a specific human with real experience.
+- If a suggestion would alter the meaning or topic of the post, do not make it.`;
 };
 
 /* ═══ SEVERITY STYLES ═══ */
@@ -532,6 +539,7 @@ export default function Home() {
   const [copied, setCopied] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [attachments, setAttachments] = useState([]);
+  const [postContext, setPostContext] = useState("");
   const textareaRef = useRef(null);
   const resultsRef = useRef(null);
   const fileRef = useRef(null);
@@ -648,7 +656,7 @@ export default function Home() {
         body: JSON.stringify({
           model: "claude-opus-4-5-20251101",
           max_tokens: 4000,
-          system: buildPrompt(platform, goal),
+          system: buildPrompt(platform, goal, postContext),
           messages: [{ role: "user", content: content.length === 1 ? draft + attCtx : content }],
         }),
       });
@@ -1036,6 +1044,12 @@ export default function Home() {
 .att-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#fff;border:1.5px dashed #D6D3D1;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:#57534E;cursor:pointer;transition:all .15s}
 .att-btn:hover{border-color:#A8A29E;background:#F5F5F4;color:#1C1917}
 .att-hint{font-size:11px;color:#A8A29E;font-style:italic}
+.ctx-wrap{margin-bottom:16px}
+.ctx-label{display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#A8A29E;margin-bottom:6px}
+.ctx-optional{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:400;text-transform:none;letter-spacing:0;color:#D6D3D1}
+.ctx-ta{width:100%;padding:10px 14px;border:1.5px solid #E7E5E4;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;color:#1C1917;background:#FAFAF9;outline:none;resize:none;transition:border-color .15s;line-height:1.5}
+.ctx-ta:focus{border-color:#A8A29E;background:#fff}
+.ctx-ta::placeholder{color:#D6D3D1}
 .att-prev{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
 .att-chip{display:flex;align-items:center;gap:8px;padding:6px 10px 6px 6px;background:#fff;border:1px solid #E7E5E4;border-radius:8px}
 .att-thumb{width:36px;height:36px;border-radius:5px;object-fit:cover}
@@ -1148,7 +1162,7 @@ export default function Home() {
                     <button className="paywall-plan-btn featured" onClick={() => window.open("https://www.postyn.ai/store/p/pro-plan", "_blank")}>
                       <div>
                         <span className="paywall-plan-name">Pro Plan</span>
-                        <span className="paywall-plan-desc">Unlimited optimizations / month</span>
+                        <span className="paywall-plan-desc">150 optimizations / month</span>
                       </div>
                       <span className="paywall-plan-arrow">→</span>
                     </button>
@@ -1327,6 +1341,20 @@ export default function Home() {
               ))}
             </div>
           )}
+
+          <div className="ctx-wrap">
+            <div className="ctx-label">
+              <span>What are you going for with this post?</span>
+              <span className="ctx-optional">optional</span>
+            </div>
+            <textarea
+              className="ctx-ta"
+              value={postContext}
+              onChange={e => setPostContext(e.target.value)}
+              placeholder="e.g. I want to establish myself as a thought leader in SaaS, this post is meant to spark debate around pricing models..."
+              rows={2}
+            />
+          </div>
 
           <button className="go" onClick={analyze} disabled={!draft.trim() || loading}>{loading ? "Analyzing..." : "Optimize this post"}</button>
 
