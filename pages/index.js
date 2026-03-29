@@ -22,7 +22,7 @@ const LOGO_SRC = "/logo.png";
 /* ═══ PLATFORM CONFIG ═══ */
 const P = {
   linkedin: {
-    name: "LinkedIn", color: "#0A66C2", max: 3000, tags: "3–5",
+    name: "LinkedIn", color: "#0A66C2", max: 3000,
     tips: [
       "Hook in first 2 lines (before 'see more')",
       "White space / line breaks boost readability and dwell time",
@@ -35,12 +35,11 @@ const P = {
     algo: "Algorithm rewards dwell time, comments in the first hour, and keeping users ON LinkedIn. Posts shown to ~8% of connections first, then expand based on engagement velocity. External links suppressed.",
   },
   instagram: {
-    name: "Instagram", color: "#E1306C", max: 2200, tags: "3–5 in caption",
+    name: "Instagram", color: "#E1306C", max: 2200,
     tips: [
       "First line truncates at ~125 chars — it IS the hook",
       "Saves are the #1 reach signal (3-4x more impactful than likes)",
       "Carousel posts get 1.4x more reach and get re-served by algorithm",
-      "Hashtags in caption now outperform hashtags in comments",
       "Share-to-DM is the #2 distribution signal",
       "Reels under 30s pushed to Explore; carousels pushed to followers",
       "Post 11am–1pm or 7–9pm",
@@ -48,7 +47,7 @@ const P = {
     algo: "Prioritizes saves and shares over likes. Evaluates interest, timeliness, relationship, session frequency. Reels get Explore; Carousels get followers. Posts can get significant reach DAYS later via Explore long tail.",
   },
   facebook: {
-    name: "Facebook", color: "#1877F2", max: 63206, tags: "1–2 max",
+    name: "Facebook", color: "#1877F2", max: 63206,
     tips: [
       "Conversational tone wins — write to one person, not an audience",
       "Comment LENGTH matters more than count — 5 long > 50 short",
@@ -61,7 +60,7 @@ const P = {
     algo: "Built around 'meaningful interactions' — long comments, replies, Messenger shares. AI classifier pre-scores posts. Consistent posters get reliability bonus. Engagement bait and external links demoted.",
   },
   twitter: {
-    name: "X (Twitter)", color: "#000000", max: 280, tags: "0–1 max",
+    name: "X (Twitter)", color: "#000000", max: 280,
     tips: [
       "First 5 words determine if the rest gets read",
       "Bookmarks are a sleeper metric — weighted heavily for For You",
@@ -151,7 +150,7 @@ REPLY STRATEGY: Suggest the poster reply to EVERY comment in the first 2 hours. 
 instagram: {
 impressions: `INSTAGRAM IMPRESSIONS SKILL:
 
-DISTRIBUTION: Phase 1 (30-60min) ~10% of followers. Saves = #1 signal (3-4x > likes). Share-to-DM = #2. Caption expansion taps tracked. Phase 2 (hrs 1-12) hashtag top posts + Explore. Carousels re-served. Phase 3 (days 2-14) long tail via Explore/Suggested. Saves compound over 14 days.
+DISTRIBUTION: Phase 1 (30-60min) ~10% of followers. Saves = #1 signal (3-4x > likes). Share-to-DM = #2. Caption expansion taps tracked. Phase 2 (hrs 1-12) Explore. Carousels re-served. Phase 3 (days 2-14) long tail via Explore/Suggested. Saves compound over 14 days.
 
 FIRST LINE (truncated ~125 chars): Tap to expand is tracked signal. 1) Incomplete Reveal — "The one thing I stopped doing that changed everything →" 2) Specific Claim — concrete numbers 3) Visual Bridge — "What you're looking at took me 3 years" 4) Quiet Hook — "Nobody talks about this part." 5) Direct Address — "If you're still doing [practice], read this."
 
@@ -218,9 +217,7 @@ ENGAGEMENT-KILLING MISTAKES:
 - Posts that are visually strong but have no caption hook — the image gets liked but the caption gets ignored
 - CTAs that feel desperate or templated
 
-STRUCTURE: Caption 400-1000 chars. Hook in first 125 chars (before truncation). Body delivers value that's save-worthy. Close with a specific question or prompt. For carousels: last slide should be the engagement CTA ("Which one resonated? Drop a number in the comments.").
-
-HASHTAG STRATEGY FOR ENGAGEMENT: 5-8 hashtags. Weight toward niche communities (smaller hashtags = more engaged audiences). Community hashtags (#smallbusinessowner, #womenintech) attract commenters who participate in those communities.`
+STRUCTURE: Caption 400-1000 chars. Hook in first 125 chars (before truncation). Body delivers value that's save-worthy. Close with a specific question or prompt. For carousels: last slide should be the engagement CTA ("Which one resonated? Drop a number in the comments.")`
 },
 
 facebook: {
@@ -429,12 +426,11 @@ Platform: ${c.name}
 Algorithm: ${c.algo}
 Best practices: ${c.tips.join("; ")}
 Character limit: ${c.max}
-Hashtag guidance: ${c.tags}
 ${contextBlock}${historyBlock}
 ${goalCtx}
 
 OUTPUT: Return a JSON array of optimization suggestions. Each object:
-- "section": "Hook/Opening"|"Body"|"Call to Action"|"Structure/Formatting"|"Hashtags/Tags"|"Overall Tone"|"Dwell Time & Pacing"|"Shareability"|"Voice & Authenticity"|"Authority Signal"|"Follow Trigger"|"Missing Element"
+- "section": "Hook/Opening"|"Body"|"Call to Action"|"Structure/Formatting"|"Overall Tone"|"Dwell Time & Pacing"|"Shareability"|"Voice & Authenticity"|"Authority Signal"|"Follow Trigger"|"Missing Element"
 - "severity": "critical"|"important"|"polish"
 - "current": specific text/element addressed
 - "suggestion": exact recommended change
