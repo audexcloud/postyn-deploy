@@ -94,67 +94,15 @@ export default async function handler(req, res) {
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const resendKey = process.env.RESEND_API_KEY;
 
-  if (!sqspKey || !supabaseUrl || !serviceKey || !resendKey) {
-    return res.status(500).json({ error: "Missing env vars" });
-  }
-
-  // Fetch orders fulfilled in the last 10 minutes
-  const since = new Date(Date.now() - 10 * 60 * 1000).toISOString();
-  const sqspRes = await fetch(
-    `https://api.squarespace.com/1.0/commerce/orders?modifiedAfter=${encodeURIComponent(since)}&fulfillmentStatus=FULFILLED`,
-    {
-      headers: {
-        Authorization: `Bearer ${sqspKey}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
-
-  if (!sqspRes.ok) {
-    const err = await sqspRes.text();
-    console.error("Squarespace API error:", err);
-    return res.status(500).json({ error: "Squarespace API failed" });
-  }
-
-  const { result: orders } = await sqspRes.json();
-
-  if (!orders || orders.length === 0) {
-    return res.status(200).json({ ok: true, processed: 0 });
+  if (!supabaseUrl || !serviceKey) {
+    return res.status(500).json({ error: "Missing Supabase env vars" });
   }
 
   const supabase = createClient(supabaseUrl, serviceKey);
-  const resend = new Resend(resendKey);
   let upgraded = 0;
   let created = 0;
 
-  for (const order of orders) {
-    const email = order.customerEmail;
-    const plan = getPlanFromLineItems(order.lineItems);
-    if (!email || !plan) continue;
-
-    // Try to update an existing account first
-    const { data: updated, error: updateErr } = await supabase
-      .from("profiles")
-      .update({ plan })
-      .eq("email", email)
-      .select("id");
-
-    if (updateErr) {
-      console.error(`Failed to update ${email}:`, updateErr);
-      continue;
-    }
-
-    if (updated && updated.length > 0) {
-      console.log(`Upgraded ${email} → ${plan}`);
-      upgraded++;
-    } else {
-      // No existing account — create one and send credentials
-      const ok = await createAccountAndNotify({ email, plan, supabase, resend });
-      if (ok) created++;
-    }
-  }
-
-  // Downgrade any subscriptions whose billing period has expired
+  // Downgrade any subscriptions whose billing period has expired (runs every tick)
   const { data: expired } = await supabase
     .from("profiles")
     .update({ plan: "free", plan_expires_at: null })
@@ -166,5 +114,47 @@ export default async function handler(req, res) {
     console.log(`Downgraded ${expired.length} expired subscription(s):`, expired.map(u => u.email));
   }
 
-  return res.status(200).json({ ok: true, upgraded, created, expired: expired?.length || 0, total: orders.length });
+  // Sync new Squarespace orders (skip gracefully if API key not configured)
+  if (sqspKey) {
+    const since = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+    const sqspRes = await fetch(
+      `https://api.squarespace.com/1.0/commerce/orders?modifiedAfter=${encodeURIComponent(since)}&fulfillmentStatus=FULFILLED`,
+      { headers: { Authorization: `Bearer ${sqspKey}`, "Content-Type": "application/json" } }
+    );
+
+    if (!sqspRes.ok) {
+      const err = await sqspRes.text();
+      console.error("Squarespace API error:", err);
+    } else {
+      const { result: orders } = await sqspRes.json();
+      if (orders?.length) {
+        const resend = resendKey ? new Resend(resendKey) : null;
+        for (const order of orders) {
+          const email = order.customerEmail;
+          const plan = getPlanFromLineItems(order.lineItems);
+          if (!email || !plan) continue;
+
+          const { data: updated, error: updateErr } = await supabase
+            .from("profiles")
+            .update({ plan })
+            .eq("email", email)
+            .select("id");
+
+          if (updateErr) { console.error(`Failed to update ${email}:`, updateErr); continue; }
+
+          if (updated && updated.length > 0) {
+            console.log(`Upgraded ${email} → ${plan}`);
+            upgraded++;
+          } else if (resend) {
+            const ok = await createAccountAndNotify({ email, plan, supabase, resend });
+            if (ok) created++;
+          } else {
+            console.warn(`No account found for ${email} and RESEND_API_KEY not set — skipping account creation`);
+          }
+        }
+      }
+    }
+  }
+
+  return res.status(200).json({ ok: true, upgraded, created, expired: expired?.length || 0 });
 }
