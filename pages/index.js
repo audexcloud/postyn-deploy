@@ -87,9 +87,7 @@ HOOK KILLERS: "I'm excited to announce..." / "I'm thrilled/honored/humbled..." /
 
 DWELL TIME STRUCTURE: Single-sentence paragraphs with line breaks. Optimal 800-1300 chars. Nested open loops — tension in para 2, resolution in para 5+. Place "the turn" AFTER the fold. Never front-load the conclusion.
 
-SHAREABILITY: Posts shared when they make the SHARER look good. Triggers: "I wish I knew this earlier" / "This is so true" / "My team needs to see this." Killers: self-promotional, requires context about poster, inside jokes.
-
-HASHTAGS: 3-5 at END. Mix: 1 broad (>1M), 2 medium (100k-1M), 1-2 niche (<100k).`,
+SHAREABILITY: Posts shared when they make the SHARER look good. Triggers: "I wish I knew this earlier" / "This is so true" / "My team needs to see this." Killers: self-promotional, requires context about poster, inside jokes.`,
 
 likes: `LINKEDIN LIKES SKILL:
 
@@ -155,8 +153,6 @@ DISTRIBUTION: Phase 1 (30-60min) ~10% of followers. Saves = #1 signal (3-4x > li
 FIRST LINE (truncated ~125 chars): Tap to expand is tracked signal. 1) Incomplete Reveal — "The one thing I stopped doing that changed everything →" 2) Specific Claim — concrete numbers 3) Visual Bridge — "What you're looking at took me 3 years" 4) Quiet Hook — "Nobody talks about this part." 5) Direct Address — "If you're still doing [practice], read this."
 
 SAVE-WORTHY: Step-by-step processes, specific recommendations, frameworks simplifying complex topics, before/after with methodology. Aggressive line breaks, numbered points, specific actionable details.
-
-HASHTAGS: 5-8 max. 1-2 large (500k+), 3-4 medium (50k-500k), 1-2 niche (<50k). At END. Topic-specific not vanity. Don't repeat sets.
 
 LENGTH: Static 400-800. Carousels 300-500. Reels 100-250. Write like texting a smart friend — conversational, fragments OK, dashes/ellipses for pacing.`,
 
@@ -524,6 +520,8 @@ export default function Home() {
   const [showConfirmPass, setShowConfirmPass] = useState(false);
   const [userPlan, setUserPlan] = useState("free"); // "free" | "base" | "pro"
   const [showPaywall, setShowPaywall] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetSent, setResetSent] = useState(false);
 
   // App state
   const [page, setPage] = useState("optimizer");
@@ -543,6 +541,7 @@ export default function Home() {
   const [planExpiresAt, setPlanExpiresAt] = useState(null);
   const [cancelConfirm, setCancelConfirm] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
+  const [editedRewrite, setEditedRewrite] = useState("");
   const textareaRef = useRef(null);
   const resultsRef = useRef(null);
   const fileRef = useRef(null);
@@ -602,6 +601,15 @@ export default function Home() {
   const overLimit = charCount > cfg.max;
   const hasSkill = !!SKILLS[platform]?.[goal];
   const loadKey = `${platform}-${goal}`;
+
+  // Usage indicator derived values
+  const effectivePlanNow = planExpiresAt && new Date() >= new Date(planExpiresAt) ? "free" : userPlan;
+  const now_ = new Date();
+  const monthStart_ = new Date(now_.getFullYear(), now_.getMonth(), 1);
+  const postsThisMonth_ = postHistory.filter(p => p.created_at && new Date(p.created_at) >= monthStart_).length;
+  const usageLimit = effectivePlanNow === "free" ? 3 : effectivePlanNow === "base" ? 50 : effectivePlanNow === "pro" ? 150 : null;
+  const usageCount = effectivePlanNow === "free" ? postHistory.length : postsThisMonth_;
+  const usageRemaining = usageLimit !== null ? usageLimit - usageCount : null;
 
   useEffect(() => {
     if (suggestions && resultsRef.current) resultsRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -671,6 +679,7 @@ export default function Home() {
       setSuggestions(parsed);
       // Save to local state
       const rw = parsed.find((s) => s.severity === "final");
+      if (rw) setEditedRewrite(rw.suggestion);
       setPostHistory((prev) => [{
         id: Date.now(),
         date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
@@ -805,6 +814,22 @@ export default function Home() {
     }
   };
 
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    setAuthError("");
+    if (!resetEmail.trim() || !/\S+@\S+\.\S+/.test(resetEmail)) { setAuthError("Please enter a valid email address."); return; }
+    try {
+      const supabase = getSupabase(); if (!supabase) { setAuthError("Service unavailable. Please try again later."); return; }
+      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) { setAuthError(error.message); return; }
+      setResetSent(true);
+    } catch (err) {
+      setAuthError("Failed to send reset email. Please try again.");
+    }
+  };
+
   const eyeIcon = (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
@@ -894,6 +919,7 @@ export default function Home() {
                   </div>
                 </div>
                 <button className="auth-btn" onClick={handleLogin}>Sign In</button>
+                <p className="auth-switch" style={{marginTop:12}}><a onClick={() => { setAuthView("reset"); setAuthError(""); setResetSent(false); setResetEmail(""); }}>Forgot your password?</a></p>
                 <p className="auth-switch">Don't have an account? <a onClick={() => { setAuthView("signup"); setSignupStep(1); setAuthError(""); }}>Create one</a></p>
               </>
             )}
@@ -967,6 +993,34 @@ export default function Home() {
                 </div>
                 <button className="auth-btn" onClick={handleSignupComplete}>Create Account</button>
                 <p className="auth-switch">Already have an account? <a onClick={() => { setAuthView("login"); setAuthError(""); }}>Sign in</a></p>
+              </>
+            )}
+
+            {authView === "reset" && (
+              <>
+                <button className="auth-back" onClick={() => { setAuthView("login"); setAuthError(""); setResetSent(false); }}>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10 12L6 8l4-4"/></svg>
+                  Back to sign in
+                </button>
+                {resetSent ? (
+                  <>
+                    <p className="auth-subtitle" style={{textAlign:"left"}}>Check your email</p>
+                    <div style={{background:"#F0FDF4",border:"1px solid #86EFAC",borderRadius:10,padding:"16px 18px",fontSize:14,color:"#166534",lineHeight:1.6,marginBottom:20}}>
+                      We sent a password reset link to <strong>{resetEmail}</strong>. Check your inbox and follow the link to set a new password.
+                    </div>
+                    <p className="auth-info-note">Didn't get it? Check your spam folder or <a style={{color:"#1C1917",cursor:"pointer",textDecoration:"underline"}} onClick={() => setResetSent(false)}>try again</a>.</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="auth-subtitle">Enter your email and we'll send you a reset link.</p>
+                    {authError && <div className="auth-err">{authError}</div>}
+                    <div className="auth-field">
+                      <label className="auth-label">Email</label>
+                      <input className="auth-input" type="email" placeholder="you@company.com" value={resetEmail} onChange={e => setResetEmail(e.target.value)} onKeyDown={e => e.key === "Enter" && handleResetPassword(e)} />
+                    </div>
+                    <button className="auth-btn" onClick={handleResetPassword}>Send Reset Link</button>
+                  </>
+                )}
               </>
             )}
           </div>
@@ -1097,7 +1151,11 @@ export default function Home() {
 .cp{padding:8px 16px;border:1px solid rgba(255,255,255,.2);border-radius:6px;background:transparent;color:#fff;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s}
 .cp:hover{background:rgba(255,255,255,.1)}
 .cp.ok{border-color:#22C55E;color:#22C55E}
-.rw-b{font-size:15px;line-height:1.7;color:rgba(255,255,255,.85);white-space:pre-wrap;word-break:break-word}
+.rw-b{width:100%;font-size:15px;line-height:1.7;color:rgba(255,255,255,.85);white-space:pre-wrap;word-break:break-word;background:transparent;border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:12px 14px;font-family:'DM Sans',sans-serif;resize:vertical;outline:none;min-height:120px;transition:border-color .15s}
+.rw-b:focus{border-color:rgba(255,255,255,.3)}
+.rw-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.rw-charcount{font-size:12px;font-family:'JetBrains Mono',monospace;color:rgba(255,255,255,.35)}
+.rw-charcount.over{color:#FCA5A5}
 .err{padding:16px;background:#FEF2F2;border:1px solid #FCA5A5;border-radius:8px;color:#991B1B;font-size:14px;margin-bottom:24px}
 
 /* ── History Page ── */
@@ -1406,6 +1464,27 @@ export default function Home() {
             </label>
           ) : null}
 
+          {usageLimit !== null && usageRemaining <= 1 && usageRemaining >= 0 && (
+            <div style={{
+              display:"flex", alignItems:"center", justifyContent:"space-between",
+              padding:"8px 12px", borderRadius:8, marginBottom:8,
+              background: usageRemaining === 0 ? "#FEF2F2" : "#FFF7ED",
+              border: `1px solid ${usageRemaining === 0 ? "#FCA5A5" : "#FDBA74"}`,
+            }}>
+              <span style={{fontSize:13, color: usageRemaining === 0 ? "#991B1B" : "#9A3412"}}>
+                {usageRemaining === 0
+                  ? `You've used all ${usageLimit} ${effectivePlanNow === "free" ? "lifetime" : "monthly"} posts.`
+                  : `1 post remaining ${effectivePlanNow === "free" ? "on your free plan" : "this month"}.`}
+              </span>
+              {effectivePlanNow !== "enterprise" && (
+                <button onClick={() => setShowPaywall(true)} style={{
+                  background:"none", border:"none", cursor:"pointer", fontSize:12, fontWeight:600,
+                  color: usageRemaining === 0 ? "#991B1B" : "#9A3412", textDecoration:"underline", padding:0,
+                }}>Upgrade</button>
+              )}
+            </div>
+          )}
+
           <button className="go" onClick={analyze} disabled={!draft.trim() || loading}>{loading ? "Analyzing..." : "Optimize this post"}</button>
 
           {error && <div className="err">{error}</div>}
@@ -1447,9 +1526,18 @@ export default function Home() {
                 <div className="rw">
                   <div className="rw-hd">
                     <span className="rw-t">Optimized Post</span>
-                    <button className={`cp ${copied ? "ok" : ""}`} onClick={() => copy(rewrite.suggestion)}>{copied ? "Copied ✓" : "Copy post"}</button>
                   </div>
-                  <div className="rw-b">{rewrite.suggestion}</div>
+                  <textarea
+                    className="rw-b"
+                    value={editedRewrite}
+                    onChange={e => setEditedRewrite(e.target.value)}
+                  />
+                  <div className="rw-footer">
+                    <span className={`rw-charcount${editedRewrite.length > cfg.max ? " over" : ""}`}>
+                      {editedRewrite.length} / {cfg.max.toLocaleString()} chars
+                    </span>
+                    <button className={`cp ${copied ? "ok" : ""}`} onClick={() => copy(editedRewrite)}>{copied ? "Copied ✓" : "Copy post"}</button>
+                  </div>
                 </div>
               )}
             </div>
