@@ -837,6 +837,46 @@ export default function Home() {
     if (suggestions && resultsRef.current) resultsRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [suggestions]);
 
+  // Refresh plan from DB when the tab regains focus (catches upgrades that happened server-side)
+  useEffect(() => {
+    const refreshPlan = async () => {
+      const supabase = getSupabase();
+      if (!supabase) return;
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+      const { data: profile } = await supabase.from("profiles").select("plan, plan_expires_at").eq("id", session.user.id).single();
+      if (profile) {
+        setUserPlan(profile.plan || "free");
+        setPlanExpiresAt(profile.plan_expires_at || null);
+      }
+    };
+    const onFocus = () => { if (authView === "app") refreshPlan(); };
+    const onVisibility = () => { if (document.visibilityState === "visible") onFocus(); };
+    document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener("focus", onFocus);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("focus", onFocus);
+    };
+  }, [authView]);
+
+  // Also refresh plan when navigating to settings
+  useEffect(() => {
+    if (page !== "settings" || authView !== "app") return;
+    const refreshPlan = async () => {
+      const supabase = getSupabase();
+      if (!supabase) return;
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+      const { data: profile } = await supabase.from("profiles").select("plan, plan_expires_at").eq("id", session.user.id).single();
+      if (profile) {
+        setUserPlan(profile.plan || "free");
+        setPlanExpiresAt(profile.plan_expires_at || null);
+      }
+    };
+    refreshPlan();
+  }, [page, authView]);
+
   const handleFiles = (e) => {
     const files = Array.from(e.target.files);
     const pending = [];

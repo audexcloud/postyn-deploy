@@ -24,6 +24,18 @@ function generateTempPassword() {
 }
 
 async function createAccountAndNotify({ email, plan, supabase, resend }) {
+  // Guard: check if a Supabase auth user already exists for this email.
+  // If so, just upgrade their profile instead of creating a duplicate account.
+  const { data: existingList } = await supabase.auth.admin.listUsers({ perPage: 1000 });
+  const existingUser = existingList?.users?.find(
+    (u) => u.email?.toLowerCase() === email.toLowerCase()
+  );
+  if (existingUser) {
+    console.log(`Auth user already exists for ${email} — upgrading profile only`);
+    await supabase.from("profiles").update({ plan }).eq("id", existingUser.id);
+    return true;
+  }
+
   const tempPassword = generateTempPassword();
   const planLabel = plan === "base" ? "Base" : "Pro";
   const planLimit = plan === "base" ? "50 posts/month" : "150 posts/month";
@@ -137,7 +149,7 @@ export default async function handler(req, res) {
           const { data: updated, error: updateErr } = await supabase
             .from("profiles")
             .update({ plan })
-            .eq("email", email)
+            .ilike("email", email)
             .select("id");
 
           if (updateErr) { console.error(`Failed to update ${email}:`, updateErr); continue; }

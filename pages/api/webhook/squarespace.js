@@ -74,7 +74,7 @@ export default async function handler(req, res) {
   const { data: users, error: userErr } = await supabase
     .from("profiles")
     .update({ plan })
-    .eq("email", customerEmail)
+    .ilike("email", customerEmail)
     .select("id");
 
   if (userErr) {
