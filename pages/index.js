@@ -1030,6 +1030,12 @@ export default function Home() {
           plan: "free",
         }, { onConflict: "id" });
         setUserPlan("free");
+        // Send welcome email (fire-and-forget)
+        fetch("/api/send-welcome", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: signupForm.email, fullName: signupForm.fullName }),
+        }).catch(() => {});
       }
       setAuthView("app");
     } catch (err) {
