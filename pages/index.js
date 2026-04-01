@@ -79,39 +79,82 @@ const SKILLS = {
 linkedin: {
 impressions: `LINKEDIN IMPRESSIONS SKILL:
 
-DISTRIBUTION PHASES: Phase 1 (60-90min) shown to 8-12% of connections, measuring dwell time, "see more" clicks, engagement velocity. 5 comments in first hour > 20 over 24hrs. Phase 2 (hrs 2-8) expands to 2nd-degree via comment depth and shares. Phase 3 (hrs 8-48) pushes to topic feeds.
+MISSION: Maximize how many LinkedIn users see this post by dominating Phase 1 (first 60-90 minutes). Every structural decision optimizes for dwell time, "see more" clicks, and share velocity. Format for slow reading — the algorithm rewards attention held, not just reactions.
 
-HOOK PATTERNS (ranked): 1) Pattern Interrupt — contradict conventional wisdom ("I stopped posting for 3 months. Business grew 40%.") 2) Specificity Hook — concrete numbers ("I analyzed 2,847 posts from Fortune 500 CEOs") 3) Tension Opener — open loop demanding resolution ("My biggest client fired me Tuesday. Best thing that happened.") 4) Counter-Narrative — flip a belief, both sides engage 5) Insider Reveal — signal exclusive access
+STRUCTURE: 800-1300 chars. Single-sentence paragraphs, line breaks between every thought. "See more" fold appears at ~210 chars — the hook must compel the click. NO outbound links in the body (suppresses reach ~40%) — move to first comment. Never edit within 10 minutes of posting — resets distribution. Max 1 post per day — rapid-fire posting penalizes each post's reach.
 
-HOOK KILLERS: "I'm excited to announce..." / "I'm thrilled/honored/humbled..." / Starting with hashtag / "In today's..." / Any generic opening
+HOOK PATTERNS (ranked):
+1) Pattern Interrupt — contradict conventional wisdom on line 1. "I stopped cold outreach for 90 days. Revenue went up."
+2) Specificity Hook — insider data that signals access. "I reviewed 847 sales calls last year. The same mistake shows up in 73% of them."
+3) Tension Opener — pause at the decision point. "My best client asked me to break our contract on Tuesday. I said yes."
+4) Counter-Narrative — flip a belief both sides feel strongly about.
 
-DWELL TIME STRUCTURE: Single-sentence paragraphs with line breaks. Optimal 800-1300 chars. Nested open loops — tension in para 2, resolution in para 5+. Place "the turn" AFTER the fold. Never front-load the conclusion.
+HOOK KILLERS: "I'm excited/thrilled/honored/humbled to announce..." / "In today's world..." / Starting with a name or tag / Any line that could have been written by anyone.
 
-SHAREABILITY: Posts shared when they make the SHARER look good. Triggers: "I wish I knew this earlier" / "This is so true" / "My team needs to see this." Killers: self-promotional, requires context about poster, inside jokes.`,
+BODY: Build tension across 3-5 short paragraphs before resolving. Place the insight AFTER the fold. Nested open loops — raise a question, then raise another before answering the first. Never front-load the conclusion.
+
+SHAREABILITY: Posts get shared when the SHARER looks good. Triggers: "I wish I'd known this earlier" / "My team needs this." Killers: requires context about the poster, self-promotional, inside references.
+
+CTA: Weak or none. Close with a line that invites sharing without begging. "This is the thing nobody told me when I started." is more shareable than any explicit CTA.
+
+ANTI-PATTERNS:
+- Any outbound URL in the body — first comment only
+- "Like if you agree" / "Share if this helped" — hard suppression signal
+- More than 1 post per day
+- Editing within 10 minutes of publishing
+- Opening with a hashtag or emoji
+
+90+ SCORE: Hook forces the "see more" click. Body builds tension before the insight lands. Zero links in body. Shareable by someone who doesn't know the poster personally. Post could only have been written by someone who was there.`,
 
 likes: `LINKEDIN LIKES SKILL:
 
-PSYCHOLOGY: A like is a micro-endorsement. People like posts that validate beliefs they haven't articulated, make them feel smart for agreeing, are emotionally resonant without manipulation.
+MISSION: Write a post that earns an immediate emotional approval tap — a quick, low-friction nod from professionals who feel validated or recognized. This is NOT an engagement post (no debate), NOT a follower post (no authority-building). It should feel like the thought a sharp colleague has at the end of the day.
 
-LIKE TRIGGERS: 1) Truth Bomb — sharp observation crystallizing common experience ("The best managers never mentioned their open-door policy. They just had one.") 2) Earned Story — vulnerability through real experience, not manufactured 3) Reframe — frustration shown in new light 4) Quiet Flex — demonstrating competence by SHOWING not telling 5) Communal Nod — shared professional experience with wit
+STRUCTURE: 400-900 chars. ONE idea per post — two ideas split attention and kill the like. No bullet points or numbered lists (they signal information, not emotion). Single-sentence paragraphs. End on the STRONGEST line — no CTAs, no questions, nothing after the landing.
 
-STRUCTURE: Optimal 400-900 chars. One idea per post. Last line matters enormously — end with strongest line, not CTA. End with resonance, not questions. Best closers recontextualize everything before them.
+HOOK PATTERNS:
+1) Truth Bomb — articulate what's true but unspoken. "The best managers never mentioned their open-door policy. They just had one."
+2) Earned Reframe — familiar frustration seen from a new angle. "We call it scope creep but half the time it's the client finally knowing what they want."
+3) Quiet Competence — demonstrate expertise by SHOWING not claiming. "The pattern I see in every failed product launch: the roadmap had dates but no decisions."
 
-SINCERITY FILTER: Authentic = specific mistake with consequences, praising someone revealing your values, describing a moment not just a lesson. Cringe = weaponized vulnerability, poverty porn, children's wisdom, humble-brags as gratitude.
+BODY: One short arc. Setup (shared tension), then the reframe or insight. No backstory, no "here's what I learned." Just the observation — specific enough to feel firsthand.
 
-FORMAT: White space for emphasis. No bullet points or numbered lists — they signal "information" not "emotion."`,
+CTA: None. The last line IS the response trigger. Any explicit CTA or question dilutes the resonance. End on the line that makes someone nod without expecting anything.
+
+SINCERITY FILTER: Authentic = specific mistake with real consequences, a moment not just a lesson. Cringe = weaponized vulnerability, children's wisdom as professional insight, humble-brags framed as gratitude ("After my third 7-figure exit, I realized...").
+
+ANTI-PATTERNS:
+- Bullet points or numbered lists — kills emotional register
+- "I'm grateful/honored/blessed" framing
+- Ending with a question — shifts goal from likes to engagement
+- Any sentence that could have been written by someone in a different industry
+
+90+ SCORE: Read it, nod, like it before finishing. Under 700 chars. Single observation. Last line lands with a small emotional thud. No question mark anywhere.`,
 
 followers: `LINKEDIN FOLLOWER GROWTH SKILL:
 
-FOLLOW REQUIREMENTS (all 3 simultaneous): 1) Authority — "knows things I don't" (demonstrated not claimed) 2) Consistency Promise — "other posts probably this good" 3) Identity Alignment — "following says something about who I want to be"
+MISSION: Make a first-time viewer decide to follow this account. The post must do three things simultaneously: demonstrate deep domain expertise (shown, not claimed), signal there's a consistent body of work behind this, and have a voice distinctive enough that the reader thinks "I want more of this specific person." Followers are won by depth, not broad appeal.
 
-DEMONSTRATE DON'T CLAIM: Never "As a 15-year veteran..." Instead: insider knowledge only experienced people have, predictions with visible reasoning, patterns others haven't named, specific technical detail used casually, frameworks you ACTUALLY use.
+STRUCTURE: 1000-1800 chars. Short paragraphs, aggressive line breaks throughout. If the content is framework-based or list-like, recommend converting to a PDF carousel upload (LinkedIn's highest-reach format — 3x more distribution than text posts, and signals depth visually). Soft follow signal near the end, never an explicit ask.
 
-ARCHETYPES: 1) Framework Post — name a concept, break it down, implies MORE frameworks 2) Behind-the-Curtain — reveal how things actually work vs public narrative 3) Prediction Post — connect dots before others 4) Methodology Post — your exact process and tools 5) Contrarian Analysis — dismantle popular opinion with evidence
+HOOK PATTERNS:
+1) Framework Post — introduce a named concept implying more exist. "The reason most founders can't scale past 10 employees: I call it the Founder Filter. Here's how it works."
+2) Behind-the-Curtain — reveal how something actually works vs. the public narrative. With specific, firsthand detail only an insider would have.
+3) Prediction Post — connect dots before others do. Name a year, an outcome, a mechanism. "In 18 months, most in-house SEO teams will be restructured. Here's the pattern I'm already seeing."
 
-SIGNALS: "Series" — imply part of larger body ("Third pattern I've noticed..."). "Depth" — tip of iceberg, answer one question raising two only YOU can answer. "Voice" — distinctive, readers want more specifically from YOU.
+DEMONSTRATE DON'T CLAIM: Never "As a 15-year veteran..." Instead: insider patterns only experienced people notice, predictions with visible reasoning, frameworks with their actual names, specific detail treated casually.
 
-IMPLICIT TRIGGERS (never say "follow me"): "Full breakdown next week" / "I track this monthly." Optimal 1000-1800 chars. Every claim should carry fingerprint of specific experience.`,
+BODY: Show the thinking process, not just the conclusion. Give the failed attempt before the success. Name counterintuitive patterns. Every claim should carry the fingerprint of someone who was actually there.
+
+CTA: Soft and implicit. "I track this quarterly — next update in April." / "Full breakdown coming Thursday." The suggestion of more content is the follow trigger. Never "Follow me for more!"
+
+ANTI-PATTERNS:
+- "As a [title] with [X] years of experience..." — claimed authority, not demonstrated
+- Generic advice any professional in any industry could have written
+- "Follow me for more [topic]!" — reads as spam on LinkedIn
+- Advice lists without a specific mechanism or story behind each point
+
+90+ SCORE: A stranger reads this and thinks "this person knows something I don't." Post implies a deeper body of work. Has a soft signal that more is coming. Could only have been written by someone with specific firsthand experience.`,
 
 engagement: `LINKEDIN ENGAGEMENT SKILL (COMMENTS, SHARES, SAVES):
 
@@ -140,114 +183,230 @@ SHARE-DRIVING TACTICS:
 - Lists of resources, tools, or methods are the most shared format on LinkedIn.
 - Contrarian takes get shared with "This 👆" — people share to endorse without writing their own post.
 
-STRUCTURE FOR ENGAGEMENT: Optimal 900-1500 chars. Long enough to establish a strong position, short enough to leave room for disagreement. Use line breaks to create pacing. Place the question or engagement hook in the FINAL line — it should be the last thing they read before deciding to comment. First comment from the poster primes the thread — suggest they add context or an alternative take as the first comment.
+STRUCTURE FOR ENGAGEMENT: 900-1500 chars. Long enough to establish a strong position, short enough to leave room for disagreement. Line breaks for pacing. Place the engagement hook in the FINAL line — last thing they read before deciding to comment. Poster's first comment primes the thread — add context or an alternative take.
 
-REPLY STRATEGY: Suggest the poster reply to EVERY comment in the first 2 hours. Each reply counts as additional engagement, and reply threads are weighted heavily. Pose follow-up questions in replies to keep the thread going.`
+REPLY STRATEGY: Reply to EVERY comment in the first 2 hours. Each reply is fresh engagement. Reply-threads are weighted heavily. Pose follow-up questions in replies to extend the thread.
+
+ANTI-PATTERNS:
+- Ending with "Thoughts?" or "Agree?" — too vague or kills comment depth
+- Posts so comprehensive there's nothing left to add
+- Questions with a single correct answer
+- Not replying to early comments — every reply generates fresh distribution signal
+
+90+ SCORE: 5+ long comments in the first 2 hours. Thread has reply-depth — people responding to each other's comments. Post sparked debate or story-sharing, not just agreement. Engagement kept alive by the poster's replies.`
 },
 
 instagram: {
 impressions: `INSTAGRAM IMPRESSIONS SKILL:
 
-DISTRIBUTION: Phase 1 (30-60min) ~10% of followers. Saves = #1 signal (3-4x > likes). Share-to-DM = #2. Caption expansion taps tracked. Phase 2 (hrs 1-12) Explore. Carousels re-served. Phase 3 (days 2-14) long tail via Explore/Suggested. Saves compound over 14 days.
+MISSION: Maximize distribution through Explore, Suggested, and the algorithmic Feed. Instagram's primary signals for Feed/Carousel posts are SAVES and SHARES — not likes. Every optimization targets making this post save-worthy (reference value) and share-worthy (personally relevant to someone specific). Carousel posts are the highest-reach format for non-Reels content.
 
-FIRST LINE (truncated ~125 chars): Tap to expand is tracked signal. 1) Incomplete Reveal — "The one thing I stopped doing that changed everything →" 2) Specific Claim — concrete numbers 3) Visual Bridge — "What you're looking at took me 3 years" 4) Quiet Hook — "Nobody talks about this part." 5) Direct Address — "If you're still doing [practice], read this."
+STRUCTURE:
+- Static/Carousel: 400-800 chars caption
+- Reels: 100-250 chars (visual does the work)
+- First line ≤125 chars — this is what appears before truncation. Tap-to-expand rate is a tracked signal.
+- Carousel: 7-10 slides optimal. First slide = hook, last slide = CTA/summary. More swipes = more algorithmic boost.
+- Include 2-4 natural topic keywords in the caption — Instagram now keyword-searches captions, not just hashtags.
 
-SAVE-WORTHY: Step-by-step processes, specific recommendations, frameworks simplifying complex topics, before/after with methodology. Aggressive line breaks, numbered points, specific actionable details.
+HOOK PATTERNS (first line, ≤125 chars):
+1) Incomplete Reveal — leave an open loop. "The reason your posts aren't converting (it's not the algorithm) →"
+2) Specific Claim — number + outcome. "I tested 47 caption hooks last month. Here's what actually worked:"
+3) Direct Address — speak to exactly who this is for. "If you've been posting consistently and still not growing, read this."
 
-LENGTH: Static 400-800. Carousels 300-500. Reels 100-250. Write like texting a smart friend — conversational, fragments OK, dashes/ellipses for pacing.`,
+SAVE-WORTHY BODY: Structure for utility — numbered steps, checklists, before/after with visible method, frameworks. These formats get saved 3-5x more than storytelling. Each point on its own line. Reads like a cheat sheet, not a paragraph.
+
+CTA: "Save this for when you [specific situation]" — genuinely useful, not engagement bait. Place 2-3 lines from the end. Last carousel slide handles the CTA visually.
+
+ANTI-PATTERNS:
+- TikTok watermarks — Instagram actively suppresses reposted TikTok content
+- First line starting with "@username" — tags don't hook
+- Wall of text with no line breaks — won't be read, won't be saved
+- Paragraph of context before the hook — the hook IS line 1, always
+- "Share if you agree" — suppressed as engagement bait
+
+90+ SCORE: First line makes me tap "more" immediately. Body is structured for saving — looks like a reference I'll return to. Post gets saved AND shared to a DM, not just liked.`,
 
 likes: `INSTAGRAM LIKES SKILL:
 
-PSYCHOLOGY: Likes are personal — taste, vibe, resonance. Driven by aesthetic approval, identity signaling, instant recognition.
+MISSION: Write a short caption that earns an immediate tap from someone scrolling fast. Instagram likes are personal — they're about vibe, taste, and instant resonance. Unlike saves (utility) or engagement (discussion), a like is a nod. The caption should feel like it was written in 30 seconds even if it wasn't. This is NOT the goal for educational content.
 
-PATTERNS: 1) One-Liner — image does heavy lifting ("The meeting that should have been a nap.") 2) Micro-Story — 2-4 sentences, complete arc 3) Relatable Confession — specific thing many feel but don't say 4) Caption-Visual Tension — unexpected caption relative to image 5) Earned Flex — specific enough to be likeable not annoying
+STRUCTURE: 50-300 chars optimal — most liked captions are under 150. 1-2 lines is the target. Never describe what's in the image — add context, emotion, or an unexpected angle. 0-2 emoji as punctuation only (never as bullets, never to open). No lists, no how-to structure.
 
-STRUCTURE: Optimal 50-300 chars. 1-2 lines best. Never describe what's in image — add context/emotion/angle. For carousels: "Slide 3 changed how I think about pricing."
+HOOK/BODY PATTERNS (this is the whole post — make it count):
+1) One-Liner — image does the heavy lifting, caption adds the punchline. "The meeting that should have been a nap."
+2) Micro-Story — 2-3 sentences, complete arc. "Charged $500 for this in 2019. Charged $5,000 for the same thing last month. The only thing that changed was me."
+3) Caption-Visual Tension — unexpected juxtaposition between image and text. Surprise earns the like.
+4) Relatable Confession — the specific thing many feel but don't say out loud.
 
-EMOJI: 0-2. As PUNCTUATION only. Never bullets. Never open with emoji. Zero for serious tone. One at end for playful.
+TONE: Dry wit > sarcasm. Vulnerability > confidence IF specific. Sounds dashed off. Observation, not presentation. Leave space for the reader to project themselves onto it.
 
-TONE: Dry wit > sarcasm. Vulnerability > confidence IF specific. Sounds written in 30 seconds. Observation not presentation. Leave space for reader to project.`,
+CTA: None. The like IS the response. Any "What do you think?" or "Save this" shifts the goal to engagement and hurts the like rate.
+
+ANTI-PATTERNS:
+- Captions over 300 chars for this goal
+- Emoji as bullets or decoration
+- Instructional or how-to content — belongs in a save-worthy post, not a likes post
+- "Share if you relate" — engagement bait suppression
+- Describing what's in the photo ("Here I am at...")
+
+90+ SCORE: Liked before finishing it. Made the reader feel understood, amused, or seen. Didn't save it, didn't comment — just liked it and kept scrolling. Under 150 chars.`,
 
 followers: `INSTAGRAM FOLLOWER GROWTH SKILL:
 
-PILLARS: 1) Niche Clarity — "I know what this account is about" 2) Value Density — "Every post delivers" 3) Voice Magnetism — "I like how they communicate." All three from single post.
+MISSION: Convert a first-time viewer into a follower by establishing niche authority, demonstrating a distinctive voice, and signaling consistent value is coming. The #1 format for Instagram follower growth is CAROUSELS — they demonstrate depth that single images can't. Reels drive impressions; carousels build followers.
 
-ARCHETYPES: 1) Signature Framework — named concept that's YOURS 2) Transformation — before/after with METHOD visible 3) Curated Authority — be the filter in your niche 4) Series — edition numbers signal consistency 5) Process Reveal — show HOW you do it
+STRUCTURE:
+- Caption: 500-1200 chars. First 125 chars = strongest hook (visible before truncation).
+- Carousel: 5-10 slides. First slide stops the scroll. Slides 2-7 deliver layered value. Last slide = soft follow CTA.
+- Include 2-4 natural topic keywords in caption for Instagram keyword search.
+- Niche must be clear from a single read — viewer should know exactly what this account is about.
 
-SIGNALS: "There's more" via numbering, referencing past/future content. Niche signal — territory clear from one post. Consistency signal — distinctive repeatable voice.
+HOOK PATTERNS:
+1) Signature Framework — introduce a named concept. "The 3-step method I use to close $10K+ clients. I call it the VAR framework:"
+2) Transformation Post — before/after with the method visible. "6 months ago my posts got 50 views. Now they average 40K. The exact 4 changes I made:"
+3) Curated Authority — position as the filter in the niche. "I've tested 200+ lead gen strategies. Here are the 5 that actually work right now:"
 
-LENGTH: 500-1200 chars. First 125 must be strongest hook. CTA: "I share one weekly" / "Part 2 Wednesday." Never "Follow for more!"
+BODY: Demonstrate expertise through specificity — real numbers, named methods, counterintuitive patterns from firsthand experience. Give systems, not just observations. Each slide or section adds a layer of depth.
 
-VOICE: Pick ONE texture and commit. Better polarizing to 30% and magnetic to 10% than forgettable to 100%.`,
+CTA: Natural and specific. "I post one framework like this every week — follow if you want the next one." Never "Follow for more content!" — reads as desperate.
 
-engagement: `INSTAGRAM ENGAGEMENT SKILL (COMMENTS, SHARES, SAVES):
+ANTI-PATTERNS:
+- Vague follow CTAs ("follow for more great content!")
+- Generic advice without a specific mechanism behind it
+- Reel-style short captions on educational carousel posts
+- "Hope this helps!" — weakens authority
+- Delivering the CTA before finishing the value
 
-PSYCHOLOGY: Instagram engagement is split into THREE distinct actions, each with different algorithmic weight. SAVES (highest weight — "I want to come back to this") > SHARES/DM (second — "someone specific needs to see this") > COMMENTS (third — "I have something to say"). Optimize for ALL THREE, not just comments.
+90+ SCORE: First-time viewer reads this and thinks "I need to follow this account." Niche is crystal clear. Voice is distinctive. Content is specific enough to signal deep expertise. They can picture what the next 5 posts will look like.`,
+
+engagement: `INSTAGRAM ENGAGEMENT SKILL (SAVES, SHARES, COMMENTS):
+
+MISSION: Instagram engagement has three tiers with distinct algorithmic weight: SAVES > SHARES/DM > COMMENTS. Optimize for all three in a single post — a save-worthy body, a shareable angle, and a comment-driving close. This is the hardest goal to optimize because you're triggering three different psychological actions simultaneously.
 
 SAVE-DRIVING MECHANICS:
-- Saves happen when content is REFERENCE-WORTHY. Tutorials, step-by-step processes, checklists, tool lists, templates.
-- The reader must think "I'll need this later" — future utility is the save trigger.
-- Numbered/structured content gets saved more than narrative content.
-- "Save this for when you [specific situation]" works as an explicit CTA for saves because it's genuinely helpful, not engagement-bait.
-- Carousel posts get 2-3x more saves because each slide adds reference value.
+- Saves happen when content is REFERENCE-WORTHY — tutorials, checklists, frameworks, tool lists, step-by-step processes.
+- The trigger: "I'll need this later." Future utility drives saves.
+- Numbered/structured content gets saved 3-5x more than narrative content.
+- Carousel posts get 2-3x more saves — each slide adds reference value.
+- CTA: "Save this for when you [specific situation]" — genuinely helpful, not bait.
 
 SHARE/DM-DRIVING MECHANICS:
 - DM shares happen when content feels PERSONAL — "this is so you" or "we were just talking about this."
-- Relatable observations about specific experiences drive DM shares: niche humor, industry-specific frustrations, lifestyle moments.
-- Content that's useful to a SPECIFIC person ("Send this to your cofounder") gets shared more than generally useful content.
-- Spicy or contrarian takes get shared for reaction: "Wait, read this" energy.
-- Memes and humor get the highest share rate, but for business accounts, "actionable + relatable" is the sweet spot.
+- Relatable niche frustrations, specific professional moments, and industry humor drive DM shares.
+- "Send this to your [specific person]" outperforms "share if you agree" — it's targeted, not broadcast.
+- Contrarian or spicy takes get forwarded for reaction: "Wait, read this" energy.
 
 COMMENT-DRIVING MECHANICS:
-- Instagram comments are harder to earn than other platforms because the feed moves fast and commenting requires more effort on mobile.
-- Questions work, but SPECIFIC questions work 3x better. "What's your go-to?" > "What do you think?"
+- Instagram comments are harder to earn — commenting on mobile is friction.
+- Specific questions get 3x more responses. "What tool do you use for this?" > "What do you think?"
 - "This or that" prompts are native to Instagram culture and drive high comment volume.
-- Hot takes that people feel compelled to agree or disagree with.
 - Personal stories that invite "same" or "me too" responses.
-- Asking for recommendations ("What's one tool you can't live without for [task]?")
+- Hot takes people feel compelled to weigh in on.
+
+STRUCTURE: 400-1000 chars. Hook in first 125 chars. Body delivers save-worthy value. Close with one specific, narrow question. For carousels: last slide = engagement CTA ("Which resonated most? Drop a number below.").
 
 ENGAGEMENT-KILLING MISTAKES:
-- "Double tap if you agree" — Instagram penalizes engagement bait
-- "Tag someone who needs this" — flagged as engagement bait since 2019
-- Asking a question that's too broad ("What are your goals?")
-- Posts that are visually strong but have no caption hook — the image gets liked but the caption gets ignored
-- CTAs that feel desperate or templated
+- "Double tap if you agree" — hard Instagram suppression
+- "Tag someone who needs this" — penalized since 2019
+- Broad questions ("What are your goals?") — nobody knows what to say
+- Visually strong post with no caption hook — image gets liked, caption gets ignored
 
-STRUCTURE: Caption 400-1000 chars. Hook in first 125 chars (before truncation). Body delivers value that's save-worthy. Close with a specific question or prompt. For carousels: last slide should be the engagement CTA ("Which one resonated? Drop a number in the comments.")`
+90+ SCORE: Gets saved AND shared AND commented on — by different people for different reasons. Body is structured enough to save. Story or take is specific enough to forward. Closing question is narrow enough to answer in 5 words.`
 },
 
 facebook: {
 impressions: `FACEBOOK IMPRESSIONS SKILL:
 
-DISTRIBUTION: Phase 1 (30-60min) AI classifier pre-scores, predicts comments/shares/hides. Links and engagement bait pre-penalized. Profiles get 3-5x more reach than Pages. Phase 2 (hrs 1-4) comment LENGTH > count, reply depth, Messenger shares weighted EXTREMELY heavily. Phase 3 (hrs 4-48) Suggested feeds with social proof, back-and-forth comments get exponential distribution. Phase 4 (days 2-7) reshare cascade.
+MISSION: Maximize organic reach on Facebook by satisfying the Phase 1 AI pre-scorer, which predicts whether a post will generate "meaningful interactions." Critical structural insight: posts under 250 characters consistently outperform long-form on Facebook for reach rate. Unlike LinkedIn where long wins, Facebook users scroll fast — punchy and personal wins reach.
 
-HOOKS (~480 chars before truncation): 1) Conversational Provocation — "Can we talk about something bugging me?" 2) Personal Admission — "I've been lying to myself about [topic]" 3) Opinion Stake — debatable industry topic 4) "What Would You Do?" — story paused at decision point 5) Community Callout — "Everyone in [role] needs to hear this"
+STRUCTURE:
+- Under 250 chars: highest reach rate (for opinions and provocations)
+- 250-800 chars: story-based posts
+- Avoid posts over 1500 chars — this is not a long-form platform
+- NO outbound links in body — 30-50% reach suppression. Move to first comment. If sharing a link, post a photo with commentary above, then link in comments.
+- Personal Profile > Page: profiles get 3-5x more organic reach
+- Groups: posting in a relevant Group gets 3-5x more reach than a Page post
 
-ANTI-ENGAGEMENT-BAIT: Actively penalized — "like if you agree" / "share if you care" / tag-a-friend / clickbait.
+DISTRIBUTION PHASES:
+Phase 1 (30-60min): AI classifier pre-scores based on predicted comment depth and Messenger shares. Profiles get 3-5x more distribution than Pages.
+Phase 2 (1-4hrs): Comment LENGTH > count. Reply-depth (threads within comments) weighted heavily. Messenger shares get maximum amplification.
+Phase 3 (4-48hrs): Suggested feeds with social proof. Back-and-forth comment threads get exponential distribution.
 
-LENGTH: 600-1500 chars. Narrative format. Personal stories highest-performing. Conversational paragraphs, not bullets. No external links in body — first comment.`,
+HOOK PATTERNS (≤150 chars works best):
+1) Conversational Provocation — "Can we talk about something nobody in [industry] wants to admit?"
+2) Personal Admission — "I've been doing this wrong for 3 years and just figured it out."
+3) Opinion Stake — one clear, debatable position. No hedging. "Cold calling is dead. Most sales teams just haven't accepted it yet."
+
+BODY: Conversational, narrative. Write to ONE person. Short sentences, 1-3 line paragraphs. Personal stories outperform instructional content 3:1 on Facebook. Let the lesson be implied, not explained.
+
+CTA: Specific question at the end that ANYONE can answer from their own experience. "Have you ever had a client say this to you?" > "What do you think?"
+
+ANTI-PATTERNS:
+- "Share if you agree" / "Like for X, comment for Y" / "Tag a friend who needs this" — Facebook's most explicitly penalized phrases
+- Outbound links in post body — first comment only
+- Clickbait phrasing ("You won't believe what happened next")
+- Posting as a Page when a personal profile is available
+- Any sentence that reads like marketing copy
+
+90+ SCORE: Short enough to read in one glance. Clear opinion or personal hook. No links in body. Zero engagement-bait phrases. Would pass Facebook's pre-scorer as a "meaningful interaction" candidate.`,
 
 likes: `FACEBOOK LIKES & REACTIONS SKILL:
 
-REACTIONS: Like (approve), Love (deeply moved), Haha (funny), Wow (surprised), Sad (empathy), Angry (outrage). Diverse reactions get MORE reach than only Likes.
+MISSION: Write content that triggers emotional reactions across Facebook's full range (Love, Haha, Wow, Sad, Angry — not just Like). Diverse reactions signal deep emotional resonance to the algorithm and trigger wider distribution. Facebook is the warmest, most emotionally-driven platform — sincere personal stories outperform clever professional observations by 3:1.
 
-PATTERNS: 1) Story Arc — emotional journey hitting Love+Wow+Like 2) Warm Flex — achievement with humanity 3) Relatable Rant — shared frustration with humor, Haha+Like 4) Unexpected Lesson — surprising outcome + new insight, Wow+Love 5) Communal Moment — in-group bonding
+REACTION MECHANICS:
+- Love: Warm achievement, touching human moment, admiration
+- Haha: Relatable frustration with humor, workplace absurdity, self-deprecation
+- Wow: Surprising outcome, data that defies expectations, unexpected twist
+- Sad: Honest admission of struggle, loss, difficult journey
+- Angry: Injustice story, system failure, "this shouldn't happen"
+Diverse reactions (Love + Wow + Haha) signal deeper emotional impact than all-Likes.
 
-STRUCTURE: 500-1200 chars. Stories in scenes not summaries. Opening sets emotional TONE. End on highest emotional note, not CTA.
+STRUCTURE: 500-1200 chars. Write in scenes, not summaries. Named people, specific places — this happened to a real person, not a concept. End on the highest emotional note — no CTA, no lesson summary, no question at the end.
 
-CALIBRATION: Facebook is WARMEST platform. Sincerity > cleverness. Personal stories with named people/places > abstract insights. First-person narratives dramatically outperform instructional content.`,
+HOOK PATTERNS:
+1) Scene-Opener — drop the reader into a specific moment. "My father called at 7am the day I signed my first contract."
+2) Emotional Admission — the thing most people feel but don't say. "I almost quit last November. I haven't told many people that."
+3) Unexpected Twist Setup — signal that what happened defied expectations. "I did everything right. It still fell apart."
+
+BODY: Three acts — Setup (what was happening), Complication (what went wrong or surprised), Resolution or Reflection (what it meant). Stay in the scene throughout. Resist explaining the lesson — let the reader draw it. The more specific the detail, the more universal the feeling.
+
+CTA: None in the post body. Optionally post a follow-up question as the first comment after publishing.
+
+ANTI-PATTERNS:
+- Abstract lessons without a personal story ("The key to success is persistence")
+- Corporate or professional jargon — Facebook is the most personal platform
+- Explaining the moral explicitly ("And that's when I realized...")
+- "Hit Love if this resonates" — engagement bait suppression
+- Writing in third person about yourself
+
+90+ SCORE: Finish reading and feel something real — relief, warmth, humor, or nostalgia. Love or Wow reaction is the instinct. Thought of someone specific to send it to. Story happened in a real place to a real person with a specific detail that couldn't be invented.`,
 
 followers: `FACEBOOK FOLLOWER GROWTH SKILL:
 
-PROFILE vs PAGE: Profile follow = strongest signal ("I want this alongside friends/family"), usually takes 2-3 exposures. Page follow = utility-driven, consistent niche value.
+MISSION: Convert someone seeing this post into a Profile follower or Page follower. On Facebook, followers are earned through the Group-to-Profile pipeline (establish authority in Groups → community visits your profile → follows if they see consistent value) and through personal stories that combine expertise with humanity. Profile follows generate 3-5x more organic reach than Page follows.
 
-THREE SIGNALS: 1) Niche Authority — show THINKING not just conclusions ("Here's WHY and what I tried first that didn't") 2) Consistency Promise — reference past/future content, series numbering 3) Community Value — create belonging
+STRUCTURE: 800-1800 chars. Personal story with professional lesson embedded — the story is the hook, the lesson is the follow trigger. Reference your consistency explicitly: "I document this every month" or "Third time I've noticed this pattern." End with a specific CTA about what they'll receive, not just that they should follow.
 
-FACEBOOK-SPECIFIC DRIVERS: Group-to-Profile pipeline. Local authority — strongest local platform. Shareable value exposing you to new networks.
+HOOK PATTERNS:
+1) Long-form Story Hook — specific scene, lesson emerges naturally. "I lost a $200,000 contract in 2022 over one sentence in my proposal. I've been thinking about it since."
+2) Local/Niche Authority — establish specific territory. "I've owned three restaurants in [city] for 12 years. Here's what the last 6 months actually looked like."
+3) Process Reveal — show HOW you think, not just what you concluded. Real steps, real dead ends, real outcome.
 
-FORMATS: Long-form personal stories with professional lessons. How-I-did-it with real numbers. Series content. Behind-the-scenes.
+BODY: Show the thinking process AND the failures before the success. Real numbers. Specific challenges. The failed attempt. Facebook followers follow people who feel like a trusted friend who's also deeply good at what they do. Expertise without warmth doesn't convert; warmth without expertise doesn't either.
 
-TRIGGERS: "I document this monthly" / Reference series / "More next week." Never "Follow my page!" Profile optimization: cover photo, bio answering "what will I get?", featured content.`,
+GROUP PIPELINE: If active in relevant Facebook Groups, cross-post or reference Group discussions on your profile. Group posts reach pre-qualified audiences and drive profile visits.
+
+CTA: Specific and earned. "I share behind-the-scenes posts like this every [day] — follow if you want more." In a Group: "I talk about this more on my profile if you want to follow along."
+
+ANTI-PATTERNS:
+- "Follow my page for more!" — reads as desperation
+- Vague value promises ("I share valuable insights regularly")
+- Content too polished or corporate — Facebook follows are emotional, not transactional
+- Posting exclusively to a Page when a personal profile is available
+- Advice without the personal story that earned it
+
+90+ SCORE: Finish reading and feel like you know this person. They know their specific domain deeply and aren't afraid to show the messy parts. The CTA tells you exactly what you'll get. You can picture their next post.`,
 
 engagement: `FACEBOOK ENGAGEMENT SKILL (COMMENTS, SHARES, SAVES):
 
@@ -279,51 +438,113 @@ SHARE-KILLING MISTAKES:
 - Engagement bait — Facebook actively penalizes "share if you agree" and similar phrases
 - External links (suppressed 30-50% — if you must link, first comment)
 
-STRUCTURE: 600-1500 chars. Conversational tone — write to ONE person. Build emotional momentum through the body. End with an open-ended question that ANYONE can answer from their own experience. Suggest the poster reply to comments with follow-up questions to build thread depth.
+STRUCTURE: 600-1500 chars. Conversational tone — write to ONE person. Build emotional momentum through the body. End with an open-ended question that ANYONE can answer from their own experience. Suggest the poster reply to every comment with a follow-up question to build thread depth.
 
-FACEBOOK-SPECIFIC ADVANTAGE: Groups. If the poster is active in relevant Facebook Groups, suggest cross-posting or referencing Group discussions. Group posts get 3-5x more engagement than feed posts because the audience is pre-qualified and the culture is participatory.`
+SHARE MECHANICS:
+- Messenger shares (private) are weighted extremely heavily — they signal "worth a personal conversation"
+- People share content that makes them look: helpful, smart, caring, or funny
+- How-to content and resource lists are the most-shared formats on Facebook
+- Emotional stories with universal themes get shared with personal endorsements
+
+ANTI-PATTERNS:
+- "Share if you agree" / engagement bait — Facebook actively penalizes these
+- External links in body — suppressed 30-50%, move to first comment
+- Posts so personal to the poster they can't be reshared
+- Not replying to early comments — every reply generates fresh engagement
+
+GROUP ADVANTAGE: If active in relevant Facebook Groups, cross-post or reference Group discussions. Group posts get 3-5x more engagement than feed posts — the audience is pre-qualified and the culture is participatory.
+
+90+ SCORE: 5+ long comments in the first hour with reply-depth within threads. Multiple Messenger shares. People responding to each other's comments, not just to the post. Engagement sustained by the poster's own replies.`
 },
 
 twitter: {
 impressions: `X IMPRESSIONS SKILL:
 
-DISTRIBUTION: Following (chronological, low ceiling) vs For You (algorithmic, 10-100x). Phase 1 (15-30min) velocity test — engagement-to-impression RATIO > raw numbers (15 likes from 100 > 50 from 1000). Bookmarks weighted heavily. Phase 2 (30-120min) For You gate — topic relevance, social graph proximity. Phase 3 (hrs 2-24) viral loop, high-follower engagements create nodes, threads re-served. Phase 4 (days 2-7) resurfaces in For You.
+MISSION: Maximize reach via the For You algorithmic feed, which requires passing a 15-30 minute velocity test (engagement-to-impression RATIO, not raw numbers). The structural insight: every outbound link in a tweet cuts reach by ~30-50%. For impressions, text-only or image-only tweets consistently outperform linked tweets. Thread format is the highest-ceiling format on X.
 
-280 CHARS = COMPRESSION ENGINE: Every word carries weight. Concrete > abstract. Active > passive. Numbers > adjectives. Names > categories.
+DISTRIBUTION PHASES:
+Phase 1 (0-30min): Velocity test. Engagement/impression ratio vs. similar accounts. 15 likes from 100 impressions > 50 from 1000.
+Phase 2 (30-120min): For You feed gate. Topic relevance + social graph proximity determine entry.
+Phase 3 (2-24hrs): Viral loop — high-follower engagements create distribution nodes. Threads get re-served.
+Phase 4 (2-7 days): Resurfaces in For You for users who didn't see it first time.
 
-PATTERNS: 1) Compressed Insight — one reframing observation, 1-2 sentences 2) Contrarian Spike — provoke both sides 3) Thread Hook — tweet #1 is the AD ("I spent 6 months reverse-engineering the algorithm. Everything I found:") 4) Observation Bomb — articulate what everyone experiences but nobody names 5) Data Drop — surprising stat + counterintuitive result 6) Quotable One-Liner — under 100 chars, screenshot-worthy
+COMPRESSION ENGINE: Every word carries weight. Concrete > abstract. Active > passive. Numbers > adjectives. Names > categories. If you can remove a word without losing meaning, remove it.
 
-THREADS: Each tweet standalone valuable. 5-8 optimal. No numbering. Never "Thread: 🧵"
+HOOK PATTERNS:
+1) Compressed Insight — one reframing observation in 1-2 sentences. Under 180 chars. Should be quotable.
+2) Thread Hook — tweet #1 is the ad. "I spent 6 months reverse-engineering why some SaaS companies reach $1M ARR and most don't. Everything I found:" Strong enough to stop the scroll.
+3) Contrarian Spike — provoke both sides of a real debate. Both agreement and disagreement are engagement.
+4) Data Drop — surprising stat + counterintuitive result. State the finding without needing a link.
 
-HASHTAGS: 0-1. Use keywords naturally instead — X reads full text for topic matching.`,
+THREADS: 5-8 tweets. Each standalone-valuable. Never number tweets. Never "Thread 🧵" opener — both are content calendar tells.
+
+NO LINKS IN BODY: If sharing a link, post it as a reply to your own tweet. Link in the tweet body cuts reach significantly.
+
+ANTI-PATTERNS:
+- Outbound links in tweet body — first reply only
+- "Thread 🧵" openers
+- Numbering tweets within a thread
+- Identical content posted multiple times — X detects and suppresses
+- Asking for retweets explicitly
+
+90+ SCORE: Passes the 15-minute velocity test with a high ratio. For You feed picks it up. Has enough standalone value to be bookmarked AND retweeted by people who don't follow the account.`,
 
 likes: `X LIKES SKILL:
 
-PSYCHOLOGY: Likes are PUBLIC — selective endorsement. Agreement signal, bookmark-lite, social positioning.
+MISSION: Write a tweet that earns a like from someone mid-scroll. On X, a like is public — it's selective endorsement and social positioning. Unlike Instagram likes (vibe-based), X likes are often given to tweets that make the liker look smart or discerning for agreeing. The benchmark: would someone screenshot this and send it to a friend?
 
-PATTERNS: 1) Perfect Compression — "Execution is just taste applied repeatedly." 2) Relatable Specific — so specific it's mind-reading 3) Well-Earned Hot Take — edgy but defensible 4) Status Observation — name dynamics nobody articulates 5) Industry Truth — what everyone knows but doesn't say 6) Witty Reframe — mundane made funny/profound
+STRUCTURE: 60-180 chars optimal. Remove every hedge ("I think," "probably," "kind of"). Remove all filler ("really," "very," "literally," "actually"). First 5 words determine everything — they're what appears in the timeline before anyone decides to read further.
 
-STRUCTURE: Highest-liked 60-180 chars. Remove every hedge ("I think," "probably"). Remove fillers ("really," "very," "actually"). First 5 words determine everything.
+HOOK/BODY PATTERNS (this IS the tweet for this goal):
+1) Perfect Compression — pack an insight so densely it sounds inevitable. "Execution is just taste applied repeatedly."
+2) Relatable Specific — so specific it feels like mind-reading. Not "remote work is lonely" but "the loneliest part of remote work is when something good happens and there's no one to tell."
+3) Well-Earned Hot Take — strong opinion, defensible. Edgy but not inflammatory.
+4) Status Observation — name a social dynamic nobody has articulated yet.
+5) Industry Truth — what everyone in the space knows but doesn't say out loud.
 
-TONE: Wit > wisdom. Compression above all. Shower thought energy. Lowercase OK. Drop final period. Contractions mandatory.
+TONE: Wit > wisdom. Compression above all. Lowercase is fine. Drop the final period. Contractions mandatory. "Shower thought" energy — sounds like a person, not a content calendar.
 
-SCREENSHOT TEST: Would someone screenshot and send to a friend? If yes, it's likeable.`,
+CTA: None. The like IS the response.
+
+ANTI-PATTERNS:
+- Hedges: "I think," "in my opinion," "probably" — removes conviction, removes likes
+- Filler words: "really," "very," "literally," "actually"
+- Ending with a question — shifts goal from likes to replies
+- More than 200 chars for this goal
+- "Thoughts?" or any engagement bait
+
+90+ SCORE: Liked before finishing. Makes the liker look smart or relatable for agreeing. Under 150 chars. No hedges. Screenshot-worthy.`,
 
 followers: `X FOLLOWER GROWTH SKILL:
 
-FOLLOW TYPES: 1) Authority — "smartest take on [topic]" 2) Voice — "laugh/think every time" 3) Insider — "has info I don't" 4) Narrative — "building something I want to watch"
+MISSION: Convert someone seeing this tweet into a follower — specifically someone who's never seen the account before. On X, the #1 follower-growth format is THREADS. A well-constructed thread delivering real value converts readers to followers at 5-10x the rate of single tweets. The follow is triggered when someone thinks "this person knows things I don't — I want this in my feed."
 
-X follows are about VOICE. Reader must hear a PERSON, not a content calendar.
+STRUCTURE:
+- Threads: 5-8 tweets. Hook tweet is the ad — strong enough to make someone read the whole thread.
+- Hook tweet: 100-200 chars. No "Thread 🧵" — just the hook.
+- Each tweet in thread: 150-280 chars, standalone-valuable. No filler tweets.
+- Final tweet: soft CTA + preview of next thread or recurring format.
+- Single tweets can also drive follows — but they need to be exceptional enough to trigger a profile visit.
 
-ARCHETYPES: 1) Thought Thread — original analysis (not summarizing) 2) Contrarian That's Right — demolish beliefs with evidence 3) Build-in-Public — real metrics, transparency 4) Recurring Format — own and repeat 5) Reply-Thread Showcase — sharp reply to big account 6) Vulnerable Precision — failure with specific details
+HOOK PATTERNS:
+1) Thread Hook — promise + intrigue. "I spent 6 months reverse-engineering why some founders reach $1M ARR and most don't. 8 patterns nobody talks about:"
+2) Contrarian Thread — challenge a widely-held belief with evidence. "Everyone says to niche down early. I think that's wrong for most founders. Here's why:"
+3) Build-in-Public — real metrics, real moment. "We crossed $10K MRR today. Exact breakdown of what worked and what was a complete waste of time:"
 
-PROFILE-CLICK BRIDGE: Tweet curiosity about PERSON → profile scan → pattern in recent tweets → follow. Bio = "Why add this voice?" Pinned = best work. Recent 5-6 tweets must show pattern.
+VOICE REQUIREMENT: X follows are voice-driven. The reader must hear a PERSON, not a content calendar. Pick one register and commit: fast and punchy, wry and precise, or earnestly contrarian. Consistency > volume.
 
-SIGNALS: "Iceberg" — casual deeper knowledge references. "Series" — creates FOMO. "Voice" — recognizable without avatar.
+PROFILE-CLICK BRIDGE: Strong tweet → curiosity about the person → profile scan → pattern in recent tweets → follow. Every tweet should make the reader curious about who's writing it.
 
-CTA: Never "Follow for more!" Never 🤝. Instead: undeniable quality, or soft tease. Best strategy: being undeniably good, repeatedly.
+CTA: Soft, at the end of the thread. "I share one thread like this per week — follow if you want the next one." Reference something specific to drive a profile visit.
 
-VOICE CONSTRUCTION: Pick SPEED + REGISTER + SUBJECT POSITION = your X voice.`,
+ANTI-PATTERNS:
+- "Follow me for more!" at the start of any tweet — strongest repellent on X
+- Purely transitional tweets ("And here's where it gets interesting...")
+- Numbering tweets in a thread — content calendar tell
+- "Thread 🧵" opener — cliché that marks you as a content machine
+- Purely informational threads with no opinion — bookmarked, not followed
+
+90+ SCORE: Hook makes me read the whole thread. Every tweet delivers a standalone insight. I finish and immediately visit the profile. The CTA at the end feels like a natural invitation.`,
 
 engagement: `X ENGAGEMENT SKILL (REPLIES, RETWEETS, BOOKMARKS):
 
@@ -522,6 +743,7 @@ export default function Home() {
   const [showPaywall, setShowPaywall] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
   const [resetSent, setResetSent] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   // App state
   const [page, setPage] = useState("optimizer");
@@ -782,6 +1004,7 @@ export default function Home() {
     if (!signupForm.password) { setAuthError("Please create a password."); return; }
     if (signupForm.password.length < 8) { setAuthError("Password must be at least 8 characters."); return; }
     if (signupForm.password !== signupForm.confirmPassword) { setAuthError("Passwords do not match."); return; }
+    if (!termsAccepted) { setAuthError("Please read and accept the Terms of Use to continue."); return; }
     try {
       const supabase = getSupabase(); if (!supabase) { setAuthError("Service unavailable. Please try again later."); return; }
       const authRes = await supabase.auth.signUp({
@@ -891,6 +1114,12 @@ export default function Home() {
 .auth-divider-line{flex:1;height:1px;background:#E7E5E4}
 .auth-divider-text{font-size:11px;color:#A8A29E;text-transform:uppercase;letter-spacing:.08em;font-family:'JetBrains Mono',monospace}
 .auth-info-note{font-size:12px;color:#A8A29E;text-align:center;margin-top:12px;line-height:1.5}
+.terms-wrap{margin-top:16px;margin-bottom:4px}
+.terms-scroll{max-height:140px;overflow-y:auto;background:#F5F5F4;border:1px solid #E7E5E4;border-radius:8px;padding:12px 14px;font-size:12px;color:#57534E;line-height:1.6;margin-bottom:10px}
+.terms-scroll p{margin:0 0 8px}
+.terms-scroll p:last-child{margin-bottom:0}
+.terms-check-row{display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:13px;color:#1C1917;line-height:1.4}
+.terms-check-row input[type=checkbox]{width:15px;height:15px;min-width:15px;margin-top:1px;accent-color:#1C1917;cursor:pointer}
 .auth-username-display{padding:12px 14px;border:1.5px solid #E7E5E4;border-radius:10px;background:#F5F5F4;font-size:14px;color:#78716C;font-family:'DM Sans',sans-serif;width:100%}
 @keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:480px){.auth-card{padding:28px 24px}.auth-logo{height:72px}.auth-brand{font-size:24px;margin-left:-18px}}
@@ -991,6 +1220,21 @@ export default function Home() {
                     <p style={{ fontSize: 12, color: "#EF4444", marginTop: 4 }}>Passwords do not match</p>
                   )}
                 </div>
+                <div className="terms-wrap">
+                  <div className="terms-scroll">
+                    <p><strong>Terms of Use &amp; Disclaimer</strong></p>
+                    <p>By creating an account on Postyn.ai, you acknowledge and agree to the following:</p>
+                    <p><strong>No Guarantee of Results.</strong> Postyn.ai provides AI-generated suggestions to help optimize social media posts. We do not guarantee any specific results, including but not limited to increased impressions, engagement, follower growth, likes, or any business outcome. Results vary by account, audience, platform algorithm, and content.</p>
+                    <p><strong>Content Responsibility.</strong> You are solely responsible for all content you create, edit, and publish using Postyn.ai. Postyn.ai is a writing assistance tool only. We do not review, moderate, or approve content before it is published. You are responsible for ensuring your posts comply with the terms of service of any platform you post to, as well as all applicable laws and regulations.</p>
+                    <p><strong>No Liability.</strong> Postyn.ai, its owners, employees, and affiliates are not liable for any direct, indirect, incidental, or consequential damages resulting from your use of this service or from content you publish. This includes but is not limited to account suspensions, loss of followers, reputational harm, or business losses.</p>
+                    <p><strong>AI Limitations.</strong> Suggestions generated by Postyn.ai are produced by AI and may be inaccurate, incomplete, or not suitable for your specific situation. Always apply your own judgment before publishing.</p>
+                    <p><strong>Platform Independence.</strong> Postyn.ai is not affiliated with, endorsed by, or partnered with LinkedIn, Instagram, Facebook, X (Twitter), or any other social media platform.</p>
+                  </div>
+                  <label className="terms-check-row">
+                    <input type="checkbox" checked={termsAccepted} onChange={e => { setTermsAccepted(e.target.checked); if (authError) setAuthError(""); }} />
+                    <span>I have read and agree to the Terms of Use &amp; Disclaimer</span>
+                  </label>
+                </div>
                 <button className="auth-btn" onClick={handleSignupComplete}>Create Account</button>
                 <p className="auth-switch">Already have an account? <a onClick={() => { setAuthView("login"); setAuthError(""); }}>Sign in</a></p>
               </>
@@ -1067,7 +1311,10 @@ export default function Home() {
 .hdr{padding:0;border-bottom:1px solid #E7E5E4;background:#FAFAF9}
 .hdr-inner{max-width:800px;margin:0 auto;padding:20px 32px 32px;text-align:center}
 .hdr-bar{display:flex;align-items:center;gap:0;margin-bottom:4px;width:100%;justify-content:space-between}
-.upgrade-btn{margin-left:auto;padding:8px 18px;background:#7C3AED;color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:background .15s;white-space:nowrap}
+.hdr-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
+.hdr-ghost-btn{padding:7px 14px;background:transparent;color:#78716C;border:1px solid #E7E5E4;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;transition:all .15s;white-space:nowrap}
+.hdr-ghost-btn:hover{background:#F5F5F4;color:#1C1917;border-color:#D6D3D1}
+.upgrade-btn{padding:8px 18px;background:#7C3AED;color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:background .15s;white-space:nowrap}
 .upgrade-btn:hover{background:#6D28D9}
 .hdr-logo{height:160px;width:auto;display:block}
 .hdr-brand{font-family:'Instrument Serif',serif;font-size:38px;font-weight:400;color:#1C1917;letter-spacing:-0.01em;margin-left:-40px}
@@ -1335,7 +1582,7 @@ export default function Home() {
                 <div className="sb-user-email">{signupForm.email || loginForm.email || ""}</div>
               </div>
             </div>
-            <button className="sb-signout" onClick={async () => { const sb = getSupabase(); if (sb) await sb.auth.signOut(); setAuthView("login"); setLoginForm({ email: "", password: "" }); setSignupForm({ fullName: "", email: "", phone: "", industry: "", password: "", confirmPassword: "" }); setSignupStep(1); setPage("optimizer"); setSuggestions(null); setDraft(""); setPostHistory([]); setUserPlan("free"); setPlanExpiresAt(null); setCancelConfirm(false); setShowPaywall(false); }}>
+            <button className="sb-signout" onClick={async () => { const sb = getSupabase(); if (sb) await sb.auth.signOut(); setAuthView("login"); setLoginForm({ email: "", password: "" }); setSignupForm({ fullName: "", email: "", phone: "", industry: "", password: "", confirmPassword: "" }); setSignupStep(1); setTermsAccepted(false); setPage("optimizer"); setSuggestions(null); setDraft(""); setPostHistory([]); setUserPlan("free"); setPlanExpiresAt(null); setCancelConfirm(false); setShowPaywall(false); }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
               Sign Out
             </button>
@@ -1357,11 +1604,15 @@ export default function Home() {
             <div className="hdr-bar">
               <img src={LOGO_SRC} alt="Postyn.ai" className="hdr-logo" />
               <span className="hdr-brand">Postyn.ai</span>
-              {userPlan === "free" && (
-                <button className="upgrade-btn" onClick={() => setShowPaywall(true)}>
-                  Upgrade
-                </button>
-              )}
+              <div className="hdr-actions">
+                <a className="hdr-ghost-btn" href="mailto:support@postyn.ai">Support</a>
+                <a className="hdr-ghost-btn" href="mailto:feedback@postyn.ai">Feedback</a>
+                {userPlan === "free" && (
+                  <button className="upgrade-btn" onClick={() => setShowPaywall(true)}>
+                    Upgrade
+                  </button>
+                )}
+              </div>
             </div>
             <h1 className="hdr-t">Write posts that actually perform.</h1>
             <p className="hdr-s">Paste your draft. Pick your platform. Get specific, explainable changes backed by how each algorithm actually works.</p>
