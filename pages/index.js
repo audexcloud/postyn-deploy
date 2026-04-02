@@ -785,7 +785,7 @@ export default function Home() {
             setPlanExpiresAt(profile.plan_expires_at || null);
             setSignupForm(prev => ({
               ...prev,
-              fullName: profile.full_name || "",
+              fullName: profile.full_name || session.user.user_metadata?.full_name || "",
               email: profile.email || session.user.email || "",
               industry: profile.industry || "",
             }));
@@ -901,8 +901,26 @@ export default function Home() {
 
   const analyze = async () => {
     if (!draft.trim()) return;
-    // Rate limiting / paywall check
-    const effectivePlan = planExpiresAt && new Date() >= new Date(planExpiresAt) ? "free" : userPlan;
+    // Always fetch the latest plan from DB before rate-limiting so upgrades are reflected immediately
+    let currentPlan = userPlan;
+    let currentExpiresAt = planExpiresAt;
+    try {
+      const supabase = getSupabase();
+      if (supabase) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          const { data: profile } = await supabase.from("profiles").select("plan, plan_expires_at").eq("id", session.user.id).single();
+          if (profile) {
+            currentPlan = profile.plan || "free";
+            currentExpiresAt = profile.plan_expires_at || null;
+            setUserPlan(currentPlan);
+            setPlanExpiresAt(currentExpiresAt);
+          }
+        }
+      }
+    } catch (_) {}
+    // Rate limiting / paywall check using live plan data
+    const effectivePlan = currentExpiresAt && new Date() >= new Date(currentExpiresAt) ? "free" : currentPlan;
     if (effectivePlan === "free") {
       if (postHistory.length >= 3) { setShowPaywall(true); return; }
     } else if (effectivePlan === "base" || effectivePlan === "pro") {
@@ -1002,7 +1020,7 @@ export default function Home() {
         setPlanExpiresAt(profile.plan_expires_at || null);
         setSignupForm(prev => ({
           ...prev,
-          fullName: profile.full_name || "",
+          fullName: profile.full_name || user.user_metadata?.full_name || "",
           email: profile.email || user.email || "",
           industry: profile.industry || "",
         }));
