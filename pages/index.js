@@ -1060,7 +1060,7 @@ export default function Home() {
     e.preventDefault();
     setAuthError("");
     if (!signupForm.password) { setAuthError("Please create a password."); return; }
-    if (signupForm.password.length < 8) { setAuthError("Password must be at least 8 characters."); return; }
+    if (signupForm.password.length < 10) { setAuthError("Password must be at least 10 characters."); return; }
     if (signupForm.password !== signupForm.confirmPassword) { setAuthError("Passwords do not match."); return; }
     if (!termsAccepted) { setAuthError("Please read and accept the Terms of Use to continue."); return; }
     try {
@@ -1079,15 +1079,22 @@ export default function Home() {
       if (authRes.error) { setAuthError(authRes.error.message); return; }
       const newUser = authRes.data?.user;
       if (newUser) {
+        // Preserve plan if the account was pre-created by a Squarespace purchase
+        const { data: existingProfile } = await supabase
+          .from("profiles")
+          .select("plan")
+          .eq("id", newUser.id)
+          .maybeSingle();
+        const plan = existingProfile?.plan ?? "free";
         await supabase.from("profiles").upsert({
           id: newUser.id,
           full_name: signupForm.fullName,
           email: signupForm.email,
           phone: signupForm.phone || null,
           industry: signupForm.industry,
-          plan: "free",
+          plan,
         }, { onConflict: "id" });
-        setUserPlan("free");
+        setUserPlan(plan);
         // Send welcome email (fire-and-forget)
         fetch("/api/send-welcome", {
           method: "POST",
@@ -1266,7 +1273,7 @@ export default function Home() {
                 <div className="auth-field">
                   <label className="auth-label">Password</label>
                   <div className="auth-input-wrap">
-                    <input className="auth-input has-eye" type={showSignupPass ? "text" : "password"} placeholder="At least 8 characters" value={signupForm.password} onChange={(e) => setSignupForm({ ...signupForm, password: e.target.value })} />
+                    <input className="auth-input has-eye" type={showSignupPass ? "text" : "password"} placeholder="At least 10 characters" value={signupForm.password} onChange={(e) => setSignupForm({ ...signupForm, password: e.target.value })} />
                     <button className="auth-eye" onClick={() => setShowSignupPass(!showSignupPass)} type="button">{showSignupPass ? eyeOffIcon : eyeIcon}</button>
                   </div>
                 </div>
